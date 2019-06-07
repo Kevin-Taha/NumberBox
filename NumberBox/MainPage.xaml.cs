@@ -25,6 +25,7 @@ namespace NumberBox
         public MainPage()
         {
             this.InitializeComponent();
+            
         }
     }
 }
