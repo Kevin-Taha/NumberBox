@@ -33,9 +33,12 @@
                    HorizontalAlignment="Center" VerticalAlignment="Center" />
             <TextBlock Grid.Row="1" Grid.Column="1" Text="Value: " HorizontalAlignment="Center" VerticalAlignment="Center" />
             <!-- REPLACE WITH NUMBERBOX LATER -->
-            <local:NumberBox Grid.Row="1" Grid.Column="0" />
+            <local:NumberBox Grid.Row="1" Grid.Column="0" Width="200" />
 
             <TextBlock Grid.Row="2" Grid.Column="0" Margin="10,25,10,10" Text="Number Box - Increment/Decrement" HorizontalAlignment="Center" VerticalAlignment="Center" />
+            <local:NumberBox Grid.Row="3" Grid.Column="0" Width="200" />
+            <TextBlock Grid.Row="3" Grid.Column="1" Text="Value: " HorizontalAlignment="Center" VerticalAlignment="Center" />
+
 
         </Grid>
 
