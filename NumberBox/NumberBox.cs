@@ -17,70 +17,74 @@ namespace NumberBox
         public double value { get; set; }
         public Boolean HasError { get; set; }
 
+
         public NumberBox()
         {
             this.DefaultStyleKey = typeof(TextBox);
-
-            
-
+            this.LostFocus += new RoutedEventHandler(Validate);
 
         }
 
-        protected override void OnLostFocus(RoutedEventArgs e)
+
+
+        void Validate(object sender, RoutedEventArgs e)
         {
             Regex rx = new Regex("\\d+.?\\d+", RegexOptions.Compiled | RegexOptions.IgnoreCase);
-
             // Give Validaton error if no match 
-            if( !rx.IsMatch(this.Text) )
+            if (!rx.IsMatch(this.Text))
             {
-                RaiseValidationError();
+                this.Text = "INVALID";
+
+                // RaiseValidationError();
             }
             else
             {
-                UpdateValidationBox();
+                this.Text = "VALID";
+                // UpdateValidationBox();
             }
-
         }
 
+                /*
 
         private void RaiseValidationError()
         {
-            this.HasError = true;
-            
+           this.HasError = true;
+
 
         }
 
         private void UpdateValidationBox()
         {
-            if ( this.HasError)
-            {
-                this.HasError = false;
-                
-                //TODO: Update Visual States
-            }
+           if ( this.HasError)
+           {
+               this.HasError = false;
+
+               //TODO: Update Visual States
+           }
         }
 
 
         public static readonly DependencyProperty HasErrorProperty =
-            DependencyProperty.Register("HasError", typeof(bool), typeof(NumberBox), new PropertyMetadata(false, HasErrorUpdated));
+           DependencyProperty.Register("HasError", typeof(bool), typeof(NumberBox), new PropertyMetadata(false, HasErrorUpdated));
 
         private static void HasErrorUpdated(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
-            NumberBox numBox = d as NumberBox;
+           NumberBox numBox = d as NumberBox;
 
-            if ( numBox != null )
-            {
-                if ( numBox.HasError )
-                {
-                    VisualStateManager.GoToState(numBox, "InvalidState", false);
-                }
-                else
-                {
-                    VisualStateManager.GoToState(numBox, "ValidState", false);
-                }
-            }
-        }
-     
+           if ( numBox != null )
+           {
+               if ( numBox.HasError )
+               {
+                   VisualStateManager.GoToState(numBox, "InvalidState", false);
+
+               }
+               else
+               {
+                   VisualStateManager.GoToState(numBox, "ValidState", false);
+               }
+           }
+        } */
+
 
 
 

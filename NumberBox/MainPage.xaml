@@ -7,6 +7,7 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+    
 
     <RelativePanel>
         <TextBlock x:Name="TitleTextBlock"
@@ -26,18 +27,29 @@
                 <RowDefinition Height="*" />
                 <RowDefinition Height="*" />
                 <RowDefinition Height="*" />
+                <RowDefinition Height="*" />
+                <RowDefinition Height="*" />
+
             </Grid.RowDefinitions>
 
 
             <TextBlock Grid.Row="0" Grid.Column="0" Text="Number Box - Default;" Margin="10" 
                    HorizontalAlignment="Center" VerticalAlignment="Center" />
             <TextBlock Grid.Row="1" Grid.Column="1" Text="Value: " HorizontalAlignment="Center" VerticalAlignment="Center" />
-            <!-- REPLACE WITH NUMBERBOX LATER -->
-            <local:NumberBox Grid.Row="1" Grid.Column="0" Width="200" />
+            <local:NumberBox x:Name="BoxZero" Grid.Row="1" Grid.Column="0" Width="200" />
 
             <TextBlock Grid.Row="2" Grid.Column="0" Margin="10,25,10,10" Text="Number Box - Increment/Decrement" HorizontalAlignment="Center" VerticalAlignment="Center" />
-            <local:NumberBox Grid.Row="3" Grid.Column="0" Width="200" />
+            <local:NumberBox  x:Name="BoxOne"  Grid.Row="3" Grid.Column="0" Width="200" />
             <TextBlock Grid.Row="3" Grid.Column="1" Text="Value: " HorizontalAlignment="Center" VerticalAlignment="Center" />
+
+
+
+            <TextBlock Grid.Row="4" Grid.Column="0" Text="Number Box Three;" Margin="10" 
+                   HorizontalAlignment="Center" VerticalAlignment="Center" />
+            <local:NumberBox Grid.Row="5" Grid.Column="0" Width="200" />
+
+
+
 
 
         </Grid>
