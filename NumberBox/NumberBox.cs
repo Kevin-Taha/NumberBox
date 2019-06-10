@@ -21,13 +21,13 @@ namespace NumberBox
         public NumberBox()
         {
             this.DefaultStyleKey = typeof(TextBox);
-            this.LostFocus += new RoutedEventHandler(Validate);
+            this.LostFocus += new RoutedEventHandler(ValidateInput);
 
         }
 
 
 
-        void Validate(object sender, RoutedEventArgs e)
+        void ValidateInput(object sender, RoutedEventArgs e)
         {
             Regex rx = new Regex("\\d+.?\\d+", RegexOptions.Compiled | RegexOptions.IgnoreCase);
             // Give Validaton error if no match 
@@ -44,7 +44,7 @@ namespace NumberBox
             }
         }
 
-                /*
+              
 
         private void RaiseValidationError()
         {
@@ -83,7 +83,7 @@ namespace NumberBox
                    VisualStateManager.GoToState(numBox, "ValidState", false);
                }
            }
-        } */
+        } 
 
 
 

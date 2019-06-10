@@ -4,9 +4,10 @@
     xmlns:local="using:NumberBox">
 
 
-        <Style x:Key="NumberBox.xaml" TargetType="TextBox">
-            <Setter Property="Foreground" Value="{ThemeResource TextControlForeground}"/>
-            <Setter Property="Background" Value="{ThemeResource TextControlBackground}"/>
+
+        <Style x:Key="NumberBox.xaml" TargetType="local:NumberBox">
+            <Setter Property="Foreground" Value="Black"/>
+            <Setter Property="Background" Value="Black"/>
             <Setter Property="BorderBrush" Value="{ThemeResource TextControlBorderBrush}"/>
             <Setter Property="SelectionHighlightColor" Value="{ThemeResource TextControlSelectionHighlightColor}"/>
             <Setter Property="BorderThickness" Value="{ThemeResource TextControlBorderThemeThickness}"/>
@@ -23,7 +24,7 @@
             <Setter Property="SelectionFlyout" Value="{StaticResource TextControlCommandBarSelectionFlyout}"/>
             <Setter Property="Template">
                 <Setter.Value>
-                    <ControlTemplate TargetType="TextBox">
+                    <ControlTemplate TargetType="local:NumberBox">
                         <Grid>
                             <Grid.Resources>
                                 <Style x:Name="DeleteButtonStyle" TargetType="Button">
