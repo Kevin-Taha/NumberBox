@@ -25,7 +25,11 @@ namespace NumberBox
     public sealed partial class NumberBox : TextBox
     {
 
-        bool HasError { get; set; }
+        public bool HasError
+        {
+            get { return (bool)GetValue(HasErrorProperty); }
+            set { SetValue(HasErrorProperty, value); }
+        }
         double Value { get; set; }
         Boolean BasicValidationEnabled { get; set; }
         Boolean IsInvalidInputOverwritten { get; set; }
@@ -39,7 +43,6 @@ namespace NumberBox
 
         public NumberBox()
         {
-            this.HasError = false;
             this.DefaultStyleKey = typeof(TextBox);
             this.BasicValidationEnabled = true;
             this.IsInvalidInputOverwritten = false;
@@ -56,7 +59,6 @@ namespace NumberBox
         private static void HasErrorUpdated(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
             NumberBox numBox = d as NumberBox;
-            Debug.WriteLine("5");
             if (numBox != null)
             {
                 if (numBox.HasError)
@@ -100,19 +102,16 @@ namespace NumberBox
             {
                 if ( this.HasError )
                 {
-                    Debug.WriteLine("2");
                     VisualStateManager.GoToState(this, "Invalid", false);
 
                 }
                 else
                 {
-                    Debug.WriteLine("3");
                     this.HasError = true;
                 }
             }
             else
             {
-                Debug.WriteLine("4");
                 this.HasError = false;
             }
         }
