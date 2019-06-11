@@ -7,7 +7,7 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
-    
+
 
     <RelativePanel>
         <TextBlock x:Name="TitleTextBlock"
@@ -54,7 +54,7 @@
 
         </Grid>
 
-      
+
 
     </RelativePanel>
 </Page>
