@@ -19,6 +19,7 @@ using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Input;
 using System.Text.RegularExpressions;
 using System.Diagnostics;
+using Windows.Globalization.NumberFormatting;
 
 namespace NumberBox
 {
@@ -52,7 +53,7 @@ namespace NumberBox
         }
 
 
-
+        // Primary Handlers for switching error states (validation)
         public static readonly DependencyProperty HasErrorProperty =
             DependencyProperty.Register("HasError", typeof(bool), typeof(NumberBox), new PropertyMetadata(false, HasErrorUpdated));
 
@@ -64,7 +65,6 @@ namespace NumberBox
                 if (numBox.HasError)
                 {
                     VisualStateManager.GoToState(numBox, "Invalid", false);
-                    Debug.WriteLine("Writing Invalid State");
                 }
                 else
                 {
@@ -73,7 +73,7 @@ namespace NumberBox
             }
         }
 
-        // Uses RegEx to validate that input is compliant
+        // Uses DecimalFormatter to validate that input is compliant
         void ValidateInput(object sender, RoutedEventArgs e)
         {
             if ( !BasicValidationEnabled )
@@ -81,9 +81,11 @@ namespace NumberBox
                 return;
             }
 
-            Regex rx = new Regex("\\d+.?\\d+", RegexOptions.Compiled | RegexOptions.IgnoreCase);
+            DecimalFormatter df = new Windows.Globalization.NumberFormatting.DecimalFormatter();
+            Nullable<double> num = df.ParseDouble(this.Text);
+
             // Give Validaton error if no match 
-            if (!rx.IsMatch(this.Text))
+            if ( num == null )
             {
                 SetErrorState(true);
 
@@ -91,6 +93,8 @@ namespace NumberBox
             else
             {
                 SetErrorState(false);
+
+
 
             }
         }
