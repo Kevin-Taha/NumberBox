@@ -20,6 +20,7 @@ using Windows.UI.Xaml.Input;
 using System.Text.RegularExpressions;
 using System.Diagnostics;
 using Windows.Globalization.NumberFormatting;
+using System.Data;
 
 namespace NumberBox
 {
@@ -43,7 +44,6 @@ namespace NumberBox
     public sealed partial class NumberBox : TextBox
     {
 
-
         // Value Storage Properties
         public double Value
         {
@@ -53,7 +53,6 @@ namespace NumberBox
         // Using a DependencyProperty as the backing store for Value.  This enables animation, styling, binding, etc...
         public static readonly DependencyProperty ValueProperty =
             DependencyProperty.Register("Value", typeof(double), typeof(NumberBox), new PropertyMetadata((double) 0 ));
-
 
 
         // Validation properties
@@ -131,6 +130,20 @@ namespace NumberBox
             DependencyProperty.Register("DoesInputRound", typeof(bool), typeof(NumberBox), new PropertyMetadata(false));
 
 
+        // Calculation Properties
+
+
+        public bool AcceptsCalculation
+        {
+            get { return (bool)GetValue(AcceptsCalculationProperty); }
+            set { SetValue(AcceptsCalculationProperty, value); }
+        }
+        public static readonly DependencyProperty AcceptsCalculationProperty =
+            DependencyProperty.Register("AcceptsCalculation", typeof(bool), typeof(NumberBox), new PropertyMetadata(false));
+
+
+
+
 
 
         public NumberBox()
@@ -151,6 +164,11 @@ namespace NumberBox
                 return;
             }
 
+            if ( AcceptsCalculation )
+            {
+                EvaluateInput();
+            }
+
             DecimalFormatter df = new Windows.Globalization.NumberFormatting.DecimalFormatter();
             Nullable<double> parsedNum = df.ParseDouble(this.Text);
 
@@ -163,9 +181,44 @@ namespace NumberBox
             else
             {
                 SetErrorState(false);
-                this.Value = (double)parsedNum;
-
+                ProcessInput( (double) parsedNum);
             }
+        }
+
+
+        void EvaluateInput()
+        {
+            String result;
+            DataTable dt = new DataTable();
+            try
+            {
+                result = Convert.ToString(dt.Compute(this.Text, null));
+            }
+            catch (Exception e)
+            {
+                return;
+            } 
+            this.Text = result;
+        }
+
+
+
+
+        // Master function for handling all other input processing
+        void ProcessInput(double val)
+        {
+            this.Value = val;
+
+            // Trim Zeros based on setting
+            if ( this.AreLeadingZerosTrimmedProperty )
+            {
+                TrimZeroes();
+            }
+
+
+
+
+
         }
 
 
@@ -232,6 +285,12 @@ namespace NumberBox
                 return BoundState.Over;
             }
             return BoundState.InBounds;
+        }
+
+
+        void TrimZeroes()
+        {
+            this.Text = this.Value.ToString();
         }
 
 
