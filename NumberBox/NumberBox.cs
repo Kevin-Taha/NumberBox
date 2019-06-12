@@ -23,6 +23,23 @@ using Windows.Globalization.NumberFormatting;
 
 namespace NumberBox
 {
+
+    enum NumberBoxUpDownButtonsPlacementMode
+    {
+        Off,
+        Inline
+    };
+    
+    enum BoundState
+    {
+        InBounds,
+        Under,
+        Over
+    };
+
+
+
+
     public sealed partial class NumberBox : TextBox
     {
 
@@ -186,6 +203,19 @@ namespace NumberBox
             }
         }
 
+        // Checks if value is in the min/max bounds set by user
+        BoundState IsInBounds()
+        {
+            if ( this.Value < this.MinValue )
+            {
+                return BoundState.Under;
+            }
+            else if ( this.Value > this.MaxValue)
+            {
+                return BoundState.Over;
+            }
+            return BoundState.InBounds;
+        }
 
 
 
