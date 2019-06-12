@@ -25,19 +25,22 @@ using System.Data;
 namespace NumberBox
 {
 
-    enum NumberBoxUpDownButtonsPlacementMode
+    // States for Increment and Decrement Buttons, changable by User
+    public enum NumberBoxUpDownButtonsPlacementMode
     {
         Hidden,
         Inline
     };
     
-    enum BoundState
-    {
-        InBounds,
-        Under,
-        Over
-    };
 
+    public enum NumberBoxMinMaxMode
+    {
+        None,
+        MinEnabled,
+        MaxEnabled,
+        MinAndMaxEnabled,
+        WrapEnabled
+    }
 
 
 
@@ -99,6 +102,27 @@ namespace NumberBox
         public static readonly DependencyProperty MaxValueProperty =
             DependencyProperty.Register( "MaxValue", typeof(double), typeof(NumberBox), new PropertyMetadata( (double) 0) );
 
+        public NumberBoxUpDownButtonsPlacementMode UpDownPlacementMode
+        {
+            get { return (NumberBoxUpDownButtonsPlacementMode)GetValue(UpDownPlacementModeProperty); }
+            set { SetValue(UpDownPlacementModeProperty, value); }
+        }
+        public static readonly DependencyProperty UpDownPlacementModeProperty =
+            DependencyProperty.Register("UpDownPlacementMode", typeof(NumberBoxUpDownButtonsPlacementMode), typeof(NumberBox), new PropertyMetadata( NumberBoxUpDownButtonsPlacementMode.Hidden ));
+
+
+        public NumberBoxMinMaxMode MinMaxMode
+        {
+            get { return (NumberBoxMinMaxMode)GetValue(MinMaxModeProperty); }
+            set { SetValue(MinMaxModeProperty, value); }
+        }
+        public static readonly DependencyProperty MinMaxModeProperty =
+            DependencyProperty.Register( "MinMaxMode", typeof(NumberBoxMinMaxMode), typeof(NumberBox), new PropertyMetadata(NumberBoxMinMaxMode.None) );
+
+
+
+
+
 
 
 
@@ -112,13 +136,13 @@ namespace NumberBox
             DependencyProperty.Register( "DecimalPrecision", typeof(double), typeof(NumberBox), new PropertyMetadata((double) 0) );
 
 
-        public bool AreLeadingZerosTrimmedProperty
+        public bool AreLeadingZerosTrimmed
         {
-            get { return (bool)GetValue(AreLeadingZerosTrimmedPropertyProperty); }
-            set { SetValue(AreLeadingZerosTrimmedPropertyProperty, value); }
+            get { return (bool)GetValue(AreLeadingZerosTrimmedProperty); }
+            set { SetValue(AreLeadingZerosTrimmedProperty, value); }
         }
-        public static readonly DependencyProperty AreLeadingZerosTrimmedPropertyProperty =
-            DependencyProperty.Register("AreLeadingZerosTrimmedProperty", typeof(bool), typeof(NumberBox), new PropertyMetadata(true)); // TODO: What is the default?
+        public static readonly DependencyProperty AreLeadingZerosTrimmedProperty =
+            DependencyProperty.Register("AreLeadingZerosTrimmed", typeof(bool), typeof(NumberBox), new PropertyMetadata(true)); // TODO: What is the default?
 
 
         public bool DoesInputRound
@@ -131,8 +155,6 @@ namespace NumberBox
 
 
         // Calculation Properties
-
-
         public bool AcceptsCalculation
         {
             get { return (bool)GetValue(AcceptsCalculationProperty); }
@@ -210,13 +232,10 @@ namespace NumberBox
             this.Value = val;
 
             // Trim Zeros based on setting
-            if ( this.AreLeadingZerosTrimmedProperty )
+            if ( this.AreLeadingZerosTrimmed )
             {
                 TrimZeroes();
             }
-
-
-
 
 
         }
@@ -272,20 +291,6 @@ namespace NumberBox
             }
         }
 
-
-        // Checks if value is in the min/max bounds set by user
-        BoundState IsInBounds(double val)
-        {
-            if ( val < this.MinValue )
-            {
-                return BoundState.Under;
-            }
-            else if ( val > this.MaxValue)
-            {
-                return BoundState.Over;
-            }
-            return BoundState.InBounds;
-        }
 
 
         void TrimZeroes()
