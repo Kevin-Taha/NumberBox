@@ -26,7 +26,7 @@ namespace NumberBox
 
     enum NumberBoxUpDownButtonsPlacementMode
     {
-        Off,
+        Hidden,
         Inline
     };
     
@@ -84,8 +84,6 @@ namespace NumberBox
 
 
         // Stepping Properties
-
-
         public double MinValue
         {
             get { return (double)GetValue(MinValueProperty); }
@@ -105,24 +103,32 @@ namespace NumberBox
 
 
 
-
-
-        // Executed on change of HasError Property
-        private static void HasErrorUpdated(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        // Precision Properties
+        public double DecimalPrecision
         {
-            NumberBox numBox = d as NumberBox;
-            if (numBox != null)
-            {
-                if (numBox.HasError)
-                {
-                    VisualStateManager.GoToState(numBox, "Invalid", false);
-                }
-                else
-                {
-                    VisualStateManager.GoToState(numBox, "Normal", false);
-                }
-            }
+            get { return (double)GetValue(DecimalPrecisionProperty); }
+            set { SetValue(DecimalPrecisionProperty, value); }
         }
+        public static readonly DependencyProperty DecimalPrecisionProperty =
+            DependencyProperty.Register( "DecimalPrecision", typeof(double), typeof(NumberBox), new PropertyMetadata((double) 0) );
+
+
+        public bool AreLeadingZerosTrimmedProperty
+        {
+            get { return (bool)GetValue(AreLeadingZerosTrimmedPropertyProperty); }
+            set { SetValue(AreLeadingZerosTrimmedPropertyProperty, value); }
+        }
+        public static readonly DependencyProperty AreLeadingZerosTrimmedPropertyProperty =
+            DependencyProperty.Register("AreLeadingZerosTrimmedProperty", typeof(bool), typeof(NumberBox), new PropertyMetadata(true)); // TODO: What is the default?
+
+
+        public bool DoesInputRound
+        {
+            get { return (bool)GetValue(DoesInputRoundProperty); }
+            set { SetValue(DoesInputRoundProperty, value); }
+        }
+        public static readonly DependencyProperty DoesInputRoundProperty =
+            DependencyProperty.Register("DoesInputRound", typeof(bool), typeof(NumberBox), new PropertyMetadata(false));
 
 
 
@@ -134,15 +140,6 @@ namespace NumberBox
             this.PointerExited += new PointerEventHandler(RefreshErrorState);
 
         }
-
-
-
-
-
-
-
-
-
 
 
 
@@ -168,6 +165,25 @@ namespace NumberBox
                 SetErrorState(false);
                 this.Value = (double)parsedNum;
 
+            }
+        }
+
+
+
+        // Executed on change of HasError Property
+        private static void HasErrorUpdated(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            NumberBox numBox = d as NumberBox;
+            if (numBox != null)
+            {
+                if (numBox.HasError)
+                {
+                    VisualStateManager.GoToState(numBox, "Invalid", false);
+                }
+                else
+                {
+                    VisualStateManager.GoToState(numBox, "Normal", false);
+                }
             }
         }
 
@@ -203,14 +219,15 @@ namespace NumberBox
             }
         }
 
+
         // Checks if value is in the min/max bounds set by user
-        BoundState IsInBounds()
+        BoundState IsInBounds(double val)
         {
-            if ( this.Value < this.MinValue )
+            if ( val < this.MinValue )
             {
                 return BoundState.Under;
             }
-            else if ( this.Value > this.MaxValue)
+            else if ( val > this.MaxValue)
             {
                 return BoundState.Over;
             }
