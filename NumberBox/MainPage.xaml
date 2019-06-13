@@ -29,6 +29,12 @@
                 <RowDefinition Height="*" />
                 <RowDefinition Height="*" />
                 <RowDefinition Height="*" />
+                <RowDefinition Height="*" />
+                <RowDefinition Height="*" />
+                <RowDefinition Height="*" />
+                <RowDefinition Height="*" />
+
+
 
             </Grid.RowDefinitions>
 
@@ -38,7 +44,7 @@
             <TextBlock Grid.Row="1" Grid.Column="1" Text="{x:Bind BoxZero.Value , Mode=OneWay}" HorizontalAlignment="Center" VerticalAlignment="Center" Width="Auto"/>
             <local:NumberBox x:Name="BoxZero" Grid.Row="1" Grid.Column="0" Width="200" />
 
-            <TextBlock Grid.Row="2" Grid.Column="0" Margin="10,25,10,10" Text="Number Box - Increment/Decrement" HorizontalAlignment="Center" VerticalAlignment="Center" />
+            <TextBlock Grid.Row="2" Grid.Column="0" Margin="10,25,10,10" Text="Number Box - Increment/Decrement (In progress)" HorizontalAlignment="Center" VerticalAlignment="Center" />
             <local:NumberBox  x:Name="BoxOne"  Grid.Row="3" Grid.Column="0" Width="200" />
             <TextBlock Grid.Row="3" Grid.Column="1" Text="{x:Bind BoxOne.Value , Mode=OneWay}" HorizontalAlignment="Center" VerticalAlignment="Center" />
 
@@ -48,6 +54,20 @@
                    HorizontalAlignment="Center" VerticalAlignment="Center" />
             <local:NumberBox x:Name="BoxTwo" Grid.Row="5" Grid.Column="0" Width="200" AcceptsCalculation="True"/>
             <TextBlock Grid.Row="5" Grid.Column="1" Text="{x:Bind BoxTwo.Value , Mode=OneWay}" HorizontalAlignment="Center" VerticalAlignment="Center" />
+
+            <TextBlock Grid.Row="6" Grid.Column="0" Text="Number Box - Min/Max Tests" Margin="10" HorizontalAlignment="Center" VerticalAlignment="Center" />
+            
+            <local:NumberBox x:Name="BoxThree" Grid.Row="7" Grid.Column="0" Width="200" MinValue="0" MaxValue="10" MinMaxMode="MinAndMaxEnabled" />
+            <RelativePanel x:Name="ThreePanel" Grid.Row="7" Grid.Column="1">
+                <TextBlock x:Name="val" Text="Value: " />
+                <TextBlock x:Name="valnum" RelativePanel.RightOf="val" Margin="10,0,0,0" Text="{x:Bind BoxThree.Value , Mode=OneWay}"  />
+
+                <TextBlock x:Name="min" RelativePanel.Below="val" Text="MinValue: " />
+                <TextBlock x:Name="minVal" RelativePanel.RightOf="min" RelativePanel.Below="val" Text="{x:Bind BoxThree.MinValue , Mode=OneWay}" />
+
+                <TextBlock x:Name="max" RelativePanel.Below="min" Text="MaxVal: " />
+                <TextBlock x:Name="maxVal" RelativePanel.RightOf="max" RelativePanel.Below="minVal" Text="{x:Bind BoxThree.MaxValue , Mode=OneWay}" />
+            </RelativePanel>
 
 
 

@@ -26,7 +26,7 @@ namespace NumberBox
 {
 
     // States for Increment and Decrement Buttons, changable by User
-    public enum NumberBoxUpDownButtonsPlacementMode
+    public enum NumberBoxSpinButtonPlacementMode
     {
         Hidden,
         Inline
@@ -102,13 +102,13 @@ namespace NumberBox
         public static readonly DependencyProperty MaxValueProperty =
             DependencyProperty.Register( "MaxValue", typeof(double), typeof(NumberBox), new PropertyMetadata( (double) 0) );
 
-        public NumberBoxUpDownButtonsPlacementMode UpDownPlacementMode
+        public NumberBoxSpinButtonPlacementMode SpinButtonPlacementMode
         {
-            get { return (NumberBoxUpDownButtonsPlacementMode)GetValue(UpDownPlacementModeProperty); }
-            set { SetValue(UpDownPlacementModeProperty, value); }
+            get { return (NumberBoxSpinButtonPlacementMode)GetValue(SpinButtonPlacementModeProperty); }
+            set { SetValue(SpinButtonPlacementModeProperty, value); }
         }
-        public static readonly DependencyProperty UpDownPlacementModeProperty =
-            DependencyProperty.Register("UpDownPlacementMode", typeof(NumberBoxUpDownButtonsPlacementMode), typeof(NumberBox), new PropertyMetadata( NumberBoxUpDownButtonsPlacementMode.Hidden ));
+        public static readonly DependencyProperty SpinButtonPlacementModeProperty =
+            DependencyProperty.Register("UpDownPlacementMode", typeof(NumberBoxSpinButtonPlacementMode), typeof(NumberBox), new PropertyMetadata( NumberBoxSpinButtonPlacementMode.Hidden ));
 
 
         public NumberBoxMinMaxMode MinMaxMode
@@ -142,7 +142,7 @@ namespace NumberBox
             set { SetValue(AreLeadingZerosTrimmedProperty, value); }
         }
         public static readonly DependencyProperty AreLeadingZerosTrimmedProperty =
-            DependencyProperty.Register("AreLeadingZerosTrimmed", typeof(bool), typeof(NumberBox), new PropertyMetadata(true)); // TODO: What is the default?
+            DependencyProperty.Register("AreLeadingZerosTrimmed", typeof(bool), typeof(NumberBox), new PropertyMetadata(true)); 
 
 
         public bool DoesInputRound
@@ -174,6 +174,11 @@ namespace NumberBox
             this.LostFocus += new RoutedEventHandler(ValidateInput);
             this.PointerExited += new PointerEventHandler(RefreshErrorState);
 
+            if ( this.SpinButtonPlacementMode == NumberBoxSpinButtonPlacementMode.Inline )
+            {
+                // TODO: Change style to include Spin Buttons
+            }
+
         }
 
 
@@ -195,7 +200,7 @@ namespace NumberBox
             Nullable<double> parsedNum = df.ParseDouble(this.Text);
 
             // Give Validaton error if no match 
-            if ( parsedNum == null )
+            if ( parsedNum == null || IsOutOfBounds( (double) parsedNum) )
             {
                 SetErrorState(true);
 
@@ -207,7 +212,39 @@ namespace NumberBox
             }
         }
 
+        bool IsOutOfBounds(double parsedNum)
+        {
+            switch( this.MinMaxMode )
+            {
+                case NumberBoxMinMaxMode.None:
+                    return false;
 
+                case NumberBoxMinMaxMode.MinAndMaxEnabled:
+                    if ( parsedNum < this.MinValue || parsedNum > this.MaxValue )
+                    {
+                        return true;
+                    }
+                    break;
+
+                case NumberBoxMinMaxMode.MinEnabled:
+                    if ( parsedNum < this.MinValue )
+                    {
+                        return true;
+                    }
+                    break;
+                case NumberBoxMinMaxMode.MaxEnabled:
+                    if ( parsedNum > this.MaxValue )
+                    {
+                        return true;
+                    }
+                    break;
+            }
+            return false;
+        }
+
+
+
+        // Performs Calculator Operations
         void EvaluateInput()
         {
             String result;
@@ -226,7 +263,7 @@ namespace NumberBox
 
 
 
-        // Master function for handling all other input processing
+        // Master function for handling all other input processing and precision settings
         void ProcessInput(double val)
         {
             this.Value = val;
@@ -292,7 +329,7 @@ namespace NumberBox
         }
 
 
-
+        // Trims zeroes if necessary and adds zeros to decimals that need it. 
         void TrimZeroes()
         {
             this.Text = this.Value.ToString();
