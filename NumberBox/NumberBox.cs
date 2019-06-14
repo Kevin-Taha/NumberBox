@@ -176,7 +176,7 @@ namespace NumberBox
 
             if ( this.SpinButtonPlacementMode == NumberBoxSpinButtonPlacementMode.Inline )
             {
-                // TODO: Change style to include Spin Buttons
+                VisualStateManager.GoToState(this, "SpinButtonsVisible", true);
             }
 
         }

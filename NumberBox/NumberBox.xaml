@@ -74,25 +74,15 @@
                             </Style>
 
 
-                            <!--
-                            <Style x:Name="SpinButtonStyle" TargetType="Button" >
-                                <Setter Property="Template">
-                                    <Setter.Value>
-                                        <ControlTemplate>
-
-
-                                        </ControlTemplate>
-                                    </Setter.Value>
-                                </Setter>
-                            </Style>
-                            -->
-                            
-                            
-                            
+                                                       
                         </Grid.Resources>
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="*"/>
                             <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="Auto"/>
+
+
                         </Grid.ColumnDefinitions>
                         <Grid.RowDefinitions>
                             <RowDefinition Height="Auto"/>
@@ -100,6 +90,8 @@
                             <RowDefinition Height="Auto"/>
                         </Grid.RowDefinitions>
                         <VisualStateManager.VisualStateGroups>
+                            
+  
                             <VisualStateGroup x:Name="CommonStates">
                                 <VisualState x:Name="Normal"/>
                                 <VisualState x:Name="Disabled">
@@ -179,6 +171,30 @@
                                 </VisualState>
                                 <VisualState x:Name="ButtonCollapsed"/>
                             </VisualStateGroup>
+
+                            <VisualStateGroup x:Name="SpinButtonStates">
+                                <VisualState x:Name="SpinButtonsVisible">
+                                    <Storyboard>
+                                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="DownSpinButton" Storyboard.TargetProperty="Visibility">
+                                            <DiscreteObjectKeyFrame KeyTime="0">
+                                                <DiscreteObjectKeyFrame.Value>
+                                                    <Visibility>Visible</Visibility>
+                                                </DiscreteObjectKeyFrame.Value>
+                                            </DiscreteObjectKeyFrame>
+                                        </ObjectAnimationUsingKeyFrames>
+                                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="UpSpinButton" Storyboard.TargetProperty="Visibility">
+                                            <DiscreteObjectKeyFrame KeyTime="0">
+                                                <DiscreteObjectKeyFrame.Value>
+                                                    <Visibility>Visible</Visibility>
+                                                </DiscreteObjectKeyFrame.Value>
+                                            </DiscreteObjectKeyFrame>
+                                        </ObjectAnimationUsingKeyFrames>
+                                    </Storyboard>
+                                </VisualState>
+                                <VisualState x:Name="DownSpinButtonCollapsed" />
+                            </VisualStateGroup>
+
+
                         </VisualStateManager.VisualStateGroups>
                         <ContentPresenter x:Name="HeaderContentPresenter" ContentTemplate="{TemplateBinding HeaderTemplate}" Content="{TemplateBinding Header}" Grid.ColumnSpan="2" Grid.Column="0" FontWeight="Normal" Foreground="{ThemeResource TextControlHeaderForeground}" Margin="{ThemeResource TextBoxTopHeaderMargin}" Grid.Row="0" TextWrapping="Wrap" VerticalAlignment="Top" Visibility="Collapsed" x:DeferLoadStrategy="Lazy"/>
                         <Border x:Name="BorderElement" Background="{TemplateBinding Background}" BorderThickness="{TemplateBinding BorderThickness}" BorderBrush="{TemplateBinding BorderBrush}" CornerRadius="{TemplateBinding CornerRadius}" Grid.ColumnSpan="2" Grid.Column="0" Control.IsTemplateFocusTarget="True" MinHeight="{ThemeResource TextControlThemeMinHeight}" MinWidth="{ThemeResource TextControlThemeMinWidth}" Grid.RowSpan="1" Grid.Row="1"/>
@@ -187,8 +203,8 @@
                         <Button x:Name="DeleteButton" AutomationProperties.AccessibilityView="Raw" BorderThickness="{TemplateBinding BorderThickness}" Grid.Column="1" FontSize="{TemplateBinding FontSize}" IsTabStop="False" MinWidth="34" Margin="{ThemeResource HelperButtonThemePadding}" Grid.Row="1" Style="{StaticResource DeleteButtonStyle}" VerticalAlignment="Stretch" Visibility="Collapsed"/>
                         <ContentPresenter x:Name="DescriptionPresenter" AutomationProperties.AccessibilityView="Raw" Content="{TemplateBinding Description}" Grid.ColumnSpan="2" Grid.Column="0" Foreground="{ThemeResource SystemControlDescriptionTextForegroundBrush}" Grid.Row="2" x:Load="False"/>
 
-                        <Button x:Name="DownSpinButton" Grid.Column="2" Grid.Row="1" BorderThickness="{TemplateBinding BorderThickness}"  FontSize="{TemplateBinding FontSize}" IsTabStop="False" MinWidth="34" Margin="{ThemeResource HelperButtonThemePadding}"  VerticalAlignment="Stretch"  />
-                        <Button x:Name="UpSpinButton" Grid.Column="3" Grid.Row="1" BorderThickness="{TemplateBinding BorderThickness}"  FontSize="{TemplateBinding FontSize}" IsTabStop="False" MinWidth="34" Margin="{ThemeResource HelperButtonThemePadding}"  VerticalAlignment="Stretch"  />
+                        <Button x:Name="DownSpinButton" Visibility="{x:Bind }" AutomationProperties.AccessibilityView="Raw"  Grid.Column="2" Grid.Row="1" BorderThickness="{TemplateBinding BorderThickness}"  FontSize="{TemplateBinding FontSize}" IsTabStop="False" MinWidth="34" Margin="{ThemeResource HelperButtonThemePadding}"  VerticalAlignment="Stretch"  />
+                        <Button x:Name="UpSpinButton" Visibility="Collapsed" Grid.Column="3" Grid.Row="1" BorderThickness="{TemplateBinding BorderThickness}"  FontSize="{TemplateBinding FontSize}" IsTabStop="False" MinWidth="34" Margin="{ThemeResource HelperButtonThemePadding}"  VerticalAlignment="Stretch"  />
 
                     </Grid>
                 </ControlTemplate>
