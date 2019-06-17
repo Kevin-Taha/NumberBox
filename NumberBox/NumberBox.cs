@@ -21,6 +21,7 @@ using System.Text.RegularExpressions;
 using System.Diagnostics;
 using Windows.Globalization.NumberFormatting;
 using System.Data;
+using System.Runtime.InteropServices.ComTypes;
 
 namespace NumberBox
 {
@@ -102,8 +103,6 @@ namespace NumberBox
         public static readonly DependencyProperty MaxValueProperty =
             DependencyProperty.Register( "MaxValue", typeof(double), typeof(NumberBox), new PropertyMetadata( (double) 0) );
 
-
-
         public double StepFrequency
         {
             get { return (double) GetValue(StepFrequencyProperty); }
@@ -179,6 +178,7 @@ namespace NumberBox
             this.DefaultStyleKey = typeof(TextBox);
             this.LostFocus += new RoutedEventHandler(ValidateInput);
             this.PointerExited += new PointerEventHandler(RefreshErrorState);
+            this.KeyUp += new KeyEventHandler( KeyPressed );
 
         }
 
@@ -186,21 +186,23 @@ namespace NumberBox
         {
             base.OnApplyTemplate();
             SetSpinnerButtonsState(this.SpinButtonPlacementMode);
+
         }
 
         // Handlers for spin button visibility and event handlers
         void SetSpinnerButtonsState( NumberBoxSpinButtonPlacementMode state )
         {
+
             DependencyObject DownSpinButton = this.GetTemplateChild("DownSpinButton");
             DependencyObject UpSpinButton = this.GetTemplateChild("UpSpinButton");
             ( (Button)DownSpinButton ).Click += new RoutedEventHandler( OnDownClick );
-            ( (Button)UpSpinButton ).Click += new RoutedEventHandler( OnUpClick );
+            ( (Button)UpSpinButton).Click += new RoutedEventHandler(OnUpClick);
+
+
 
             if ( state == NumberBoxSpinButtonPlacementMode.Inline )
             {
                 VisualStateManager.GoToState(this, "SpinButtonsVisible", false);
-
-                
             }
 
 
@@ -217,6 +219,30 @@ namespace NumberBox
         {
             StepValue(true);
         }
+
+        void KeyPressed(object sender, KeyRoutedEventArgs e)
+        {
+            // https://docs.microsoft.com/en-us/uwp/api/Windows.System.VirtualKey
+            switch ( (int) e.Key)
+            {
+                // Keyboard Up Key
+                case 204:
+                case 38:
+                    if ( this.SpinButtonPlacementMode != NumberBoxSpinButtonPlacementMode.Hidden )
+                    {
+                        StepValue(true);
+                    }
+                    break;
+                case 40:
+                    if (this.SpinButtonPlacementMode != NumberBoxSpinButtonPlacementMode.Hidden)
+                    {
+                        StepValue(false);
+                    }
+                    break;
+
+            }
+        }
+
 
         // Steps value by user set increment.
         void StepValue( bool sign )
