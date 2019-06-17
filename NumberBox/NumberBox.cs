@@ -274,6 +274,7 @@ namespace NumberBox
                         StepValue(true);
                     }
                     break;
+                // Keyboard Down Key
                 case 40:
                     if (this.SpinButtonPlacementMode != NumberBoxSpinButtonPlacementMode.Hidden)
                     {
@@ -307,6 +308,13 @@ namespace NumberBox
         // Uses DecimalFormatter to validate that input is compliant
         void ValidateInput(object sender, RoutedEventArgs e)
         {
+            if (this.Text == "")
+            {
+                SetErrorState(false);
+                return;
+            }
+
+
             if ( !BasicValidationEnabled )
             {
                 return;
