@@ -102,6 +102,17 @@ namespace NumberBox
         public static readonly DependencyProperty MaxValueProperty =
             DependencyProperty.Register( "MaxValue", typeof(double), typeof(NumberBox), new PropertyMetadata( (double) 0) );
 
+
+
+        public double StepFrequency
+        {
+            get { return (double) GetValue(StepFrequencyProperty); }
+            set { SetValue(StepFrequencyProperty, value); }
+        }
+        // Using a DependencyProperty as the backing store for StepFrequency.  This enables animation, styling, binding, etc...
+        public static readonly DependencyProperty StepFrequencyProperty =
+            DependencyProperty.Register("StepFrequency", typeof(double), typeof(NumberBox), new PropertyMetadata( (double) 0));
+
         public NumberBoxSpinButtonPlacementMode SpinButtonPlacementMode
         {
             get { return (NumberBoxSpinButtonPlacementMode)GetValue(SpinButtonPlacementModeProperty); }
@@ -118,11 +129,6 @@ namespace NumberBox
         }
         public static readonly DependencyProperty MinMaxModeProperty =
             DependencyProperty.Register( "MinMaxMode", typeof(NumberBoxMinMaxMode), typeof(NumberBox), new PropertyMetadata(NumberBoxMinMaxMode.None) );
-
-
-
-
-
 
 
 
@@ -174,13 +180,61 @@ namespace NumberBox
             this.LostFocus += new RoutedEventHandler(ValidateInput);
             this.PointerExited += new PointerEventHandler(RefreshErrorState);
 
-            if ( this.SpinButtonPlacementMode == NumberBoxSpinButtonPlacementMode.Inline )
+        }
+
+        protected override void OnApplyTemplate()
+        {
+            base.OnApplyTemplate();
+            SetSpinnerButtonsState(this.SpinButtonPlacementMode);
+        }
+
+        // Handlers for spin button visibility and event handlers
+        void SetSpinnerButtonsState( NumberBoxSpinButtonPlacementMode state )
+        {
+            DependencyObject DownSpinButton = this.GetTemplateChild("DownSpinButton");
+            DependencyObject UpSpinButton = this.GetTemplateChild("UpSpinButton");
+            ( (Button)DownSpinButton ).Click += new RoutedEventHandler( OnDownClick );
+            ( (Button)UpSpinButton ).Click += new RoutedEventHandler( OnUpClick );
+
+            if ( state == NumberBoxSpinButtonPlacementMode.Inline )
             {
-                // TODO: Change style to include Spin Buttons
+                VisualStateManager.GoToState(this, "SpinButtonsVisible", false);
+
+                
             }
+
 
         }
 
+        // Event handlers for spin button clicks
+        void OnDownClick(object sender, RoutedEventArgs e)
+        {
+            StepValue(false);
+
+        }
+
+        void OnUpClick(object sender, RoutedEventArgs e)
+        {
+            StepValue(true);
+        }
+
+        // Steps value by user set increment.
+        void StepValue( bool sign )
+        {
+            // Validate input before stepping, this includes evaluation of calculation
+            ValidateInput( this, new RoutedEventArgs() );
+
+            if (sign)
+            {
+                Value += StepFrequency;
+            }
+            else
+            {
+                Value -= StepFrequency;
+            }
+            this.Text = Value.ToString();
+            ProcessInput(Value);
+        }
 
 
         // Uses DecimalFormatter to validate that input is compliant
@@ -259,7 +313,6 @@ namespace NumberBox
             } 
             this.Text = result;
         }
-
 
 
 
