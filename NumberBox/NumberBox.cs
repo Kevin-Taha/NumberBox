@@ -221,6 +221,9 @@ namespace NumberBox
         // Steps value by user set increment.
         void StepValue( bool sign )
         {
+            // Validate input before stepping, this includes evaluation of calculation
+            ValidateInput( this, new RoutedEventArgs() );
+
             if (sign)
             {
                 Value += StepFrequency;

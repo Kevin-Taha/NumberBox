@@ -45,7 +45,7 @@
             <local:NumberBox x:Name="BoxZero" Grid.Row="1" Grid.Column="0" Width="200" />
 
             <TextBlock Grid.Row="2" Grid.Column="0" Margin="10,25,10,10" Text="Number Box - Increment/Decrement (In progress)" HorizontalAlignment="Center" VerticalAlignment="Center" />
-            <local:NumberBox  x:Name="BoxOne"  Grid.Row="3" Grid.Column="0" Width="200" SpinButtonPlacementMode="Inline" StepFrequency="1" />
+            <local:NumberBox  x:Name="BoxOne"  Grid.Row="3" Grid.Column="0" Width="200" SpinButtonPlacementMode="Inline" StepFrequency="1" AcceptsCalculation="False" />
             <TextBlock Grid.Row="3" Grid.Column="1" Text="{x:Bind BoxOne.Value , Mode=OneWay}" HorizontalAlignment="Center" VerticalAlignment="Center" />
 
 
