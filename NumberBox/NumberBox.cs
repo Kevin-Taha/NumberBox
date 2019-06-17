@@ -21,6 +21,8 @@ using System.Text.RegularExpressions;
 using System.Diagnostics;
 using Windows.Globalization.NumberFormatting;
 using System.Data;
+using System.Runtime.InteropServices.ComTypes;
+using Windows.UI.Input;
 
 namespace NumberBox
 {
@@ -47,7 +49,9 @@ namespace NumberBox
     public sealed partial class NumberBox : TextBox
     {
 
-        // Value Storage Properties
+        /* Value Storage Properties
+         * 
+         */
         public double Value
         {
             get { return (double)GetValue(ValueProperty); }
@@ -58,7 +62,9 @@ namespace NumberBox
             DependencyProperty.Register("Value", typeof(double), typeof(NumberBox), new PropertyMetadata((double) 0 ));
 
 
-        // Validation properties
+        /* Validation properties
+         * 
+         */
         public bool BasicValidationEnabled
         {
             get { return (bool)GetValue(BasicValidationEnabledProperty); }
@@ -85,7 +91,9 @@ namespace NumberBox
 
 
 
-        // Stepping Properties
+        /* Stepping Properties
+         * 
+         */
         public double MinValue
         {
             get { return (double)GetValue(MinValueProperty); }
@@ -101,8 +109,6 @@ namespace NumberBox
         }
         public static readonly DependencyProperty MaxValueProperty =
             DependencyProperty.Register( "MaxValue", typeof(double), typeof(NumberBox), new PropertyMetadata( (double) 0) );
-
-
 
         public double StepFrequency
         {
@@ -122,6 +128,15 @@ namespace NumberBox
             DependencyProperty.Register("UpDownPlacementMode", typeof(NumberBoxSpinButtonPlacementMode), typeof(NumberBox), new PropertyMetadata( NumberBoxSpinButtonPlacementMode.Hidden ));
 
 
+        public bool HyperScrollEnabled
+        {
+            get { return (bool)GetValue(HyperScrollEnabledProperty); }
+            set { SetValue(HyperScrollEnabledProperty, value); }
+        }
+        // Using a DependencyProperty as the backing store for HyperScrollEnabled.  This enables animation, styling, binding, etc...
+        public static readonly DependencyProperty HyperScrollEnabledProperty =
+            DependencyProperty.Register("HyperScrollEnabled", typeof(bool), typeof(NumberBox), new PropertyMetadata(false));
+
         public NumberBoxMinMaxMode MinMaxMode
         {
             get { return (NumberBoxMinMaxMode)GetValue(MinMaxModeProperty); }
@@ -132,7 +147,9 @@ namespace NumberBox
 
 
 
-        // Precision Properties
+        /* Precision Properties
+         * 
+         */
         public double DecimalPrecision
         {
             get { return (double)GetValue(DecimalPrecisionProperty); }
@@ -160,7 +177,9 @@ namespace NumberBox
             DependencyProperty.Register("DoesInputRound", typeof(bool), typeof(NumberBox), new PropertyMetadata(false));
 
 
-        // Calculation Properties
+        /* Calculation Properties
+         * 
+         */
         public bool AcceptsCalculation
         {
             get { return (bool)GetValue(AcceptsCalculationProperty); }
@@ -179,28 +198,38 @@ namespace NumberBox
             this.DefaultStyleKey = typeof(TextBox);
             this.LostFocus += new RoutedEventHandler(ValidateInput);
             this.PointerExited += new PointerEventHandler(RefreshErrorState);
+            this.KeyUp += new KeyEventHandler( KeyPressed );
 
         }
 
         protected override void OnApplyTemplate()
         {
             base.OnApplyTemplate();
+            // enable spinner buttons
             SetSpinnerButtonsState(this.SpinButtonPlacementMode);
+
+            if ( HyperScrollEnabled )
+            {
+                this.PointerWheelChanged += new PointerEventHandler(OnScroll);
+            }
+
+
         }
 
         // Handlers for spin button visibility and event handlers
         void SetSpinnerButtonsState( NumberBoxSpinButtonPlacementMode state )
         {
+
             DependencyObject DownSpinButton = this.GetTemplateChild("DownSpinButton");
             DependencyObject UpSpinButton = this.GetTemplateChild("UpSpinButton");
             ( (Button)DownSpinButton ).Click += new RoutedEventHandler( OnDownClick );
-            ( (Button)UpSpinButton ).Click += new RoutedEventHandler( OnUpClick );
+            ( (Button)UpSpinButton).Click += new RoutedEventHandler(OnUpClick);
+
+
 
             if ( state == NumberBoxSpinButtonPlacementMode.Inline )
             {
                 VisualStateManager.GoToState(this, "SpinButtonsVisible", false);
-
-                
             }
 
 
@@ -217,6 +246,44 @@ namespace NumberBox
         {
             StepValue(true);
         }
+
+        void OnScroll(object sender, PointerRoutedEventArgs e)
+        {
+            int delta = e.GetCurrentPoint(this).Properties.MouseWheelDelta;
+            if ( delta > 0 )
+            {
+                StepValue(true);
+            }
+            else if ( delta < 0 )
+            {
+                StepValue(false);
+            }
+
+        }
+
+        void KeyPressed(object sender, KeyRoutedEventArgs e)
+        {
+            // https://docs.microsoft.com/en-us/uwp/api/Windows.System.VirtualKey
+            switch ( (int) e.Key)
+            {
+                // Keyboard Up Key
+                case 204:
+                case 38:
+                    if ( this.SpinButtonPlacementMode != NumberBoxSpinButtonPlacementMode.Hidden )
+                    {
+                        StepValue(true);
+                    }
+                    break;
+                case 40:
+                    if (this.SpinButtonPlacementMode != NumberBoxSpinButtonPlacementMode.Hidden)
+                    {
+                        StepValue(false);
+                    }
+                    break;
+
+            }
+        }
+
 
         // Steps value by user set increment.
         void StepValue( bool sign )
@@ -387,13 +454,6 @@ namespace NumberBox
         {
             this.Text = this.Value.ToString();
         }
-
-
-
-
-
-
-
 
 
 
