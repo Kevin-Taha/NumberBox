@@ -117,7 +117,7 @@ namespace NumberBox
         }
         // Using a DependencyProperty as the backing store for StepFrequency.  This enables animation, styling, binding, etc...
         public static readonly DependencyProperty StepFrequencyProperty =
-            DependencyProperty.Register("StepFrequency", typeof(double), typeof(NumberBox), new PropertyMetadata( (double) 0));
+            DependencyProperty.Register("StepFrequency", typeof(double), typeof(NumberBox), new PropertyMetadata( (double) 1));
 
         public NumberBoxSpinButtonPlacementMode SpinButtonPlacementMode
         {
@@ -125,7 +125,7 @@ namespace NumberBox
             set { SetValue(SpinButtonPlacementModeProperty, value); }
         }
         public static readonly DependencyProperty SpinButtonPlacementModeProperty =
-            DependencyProperty.Register("UpDownPlacementMode", typeof(NumberBoxSpinButtonPlacementMode), typeof(NumberBox), new PropertyMetadata( NumberBoxSpinButtonPlacementMode.Hidden ));
+            DependencyProperty.Register("UpDownPlacementMode", typeof(NumberBoxSpinButtonPlacementMode), typeof(NumberBox), new PropertyMetadata(NumberBoxSpinButtonPlacementMode.Hidden, HasSpinnerUpdated ));
 
 
         public bool HyperScrollEnabled
@@ -225,8 +225,6 @@ namespace NumberBox
             ( (Button)DownSpinButton ).Click += new RoutedEventHandler( OnDownClick );
             ( (Button)UpSpinButton).Click += new RoutedEventHandler(OnUpClick);
 
-
-
             if ( state == NumberBoxSpinButtonPlacementMode.Inline )
             {
                 VisualStateManager.GoToState(this, "SpinButtonsVisible", false);
@@ -235,11 +233,23 @@ namespace NumberBox
 
         }
 
+        private static void HasSpinnerUpdated(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            NumberBox numBox = d as NumberBox;
+            if ( numBox != null && numBox.SpinButtonPlacementMode == NumberBoxSpinButtonPlacementMode.Inline )
+            {
+                VisualStateManager.GoToState(numBox, "SpinButtonsVisible", false);
+            }
+            else if ( numBox != null && numBox.SpinButtonPlacementMode == NumberBoxSpinButtonPlacementMode.Hidden )
+            {
+                VisualStateManager.GoToState(numBox, "SpinButtonsCollapsed", false);
+            }
+        }
+
         // Event handlers for spin button clicks
         void OnDownClick(object sender, RoutedEventArgs e)
         {
             StepValue(false);
-
         }
 
         void OnUpClick(object sender, RoutedEventArgs e)
@@ -269,16 +279,11 @@ namespace NumberBox
                 // Keyboard Up Key
                 case 204:
                 case 38:
-                    if ( this.SpinButtonPlacementMode != NumberBoxSpinButtonPlacementMode.Hidden )
-                    {
-                        StepValue(true);
-                    }
+                    StepValue(true);
                     break;
+                // Keyboard Down Key
                 case 40:
-                    if (this.SpinButtonPlacementMode != NumberBoxSpinButtonPlacementMode.Hidden)
-                    {
-                        StepValue(false);
-                    }
+                    StepValue(false);
                     break;
 
             }
@@ -299,7 +304,21 @@ namespace NumberBox
             {
                 Value -= StepFrequency;
             }
+
+            // Wrap value on step if applies
+            if ( MinMaxMode == NumberBoxMinMaxMode.WrapEnabled && IsOutOfBounds(Value) )
+            {
+                while ( Value > MaxValue )
+                {
+                    Value = MinValue + (Value - MaxValue) - 1;
+                }
+                while ( Value < MinValue )
+                {
+                    Value = MaxValue - Math.Abs(Value - MinValue) + 1;
+                }
+            }
             this.Text = Value.ToString();
+
             ProcessInput(Value);
         }
 
@@ -307,6 +326,13 @@ namespace NumberBox
         // Uses DecimalFormatter to validate that input is compliant
         void ValidateInput(object sender, RoutedEventArgs e)
         {
+            if (this.Text == "")
+            {
+                SetErrorState(false);
+                return;
+            }
+
+
             if ( !BasicValidationEnabled )
             {
                 return;
@@ -359,11 +385,15 @@ namespace NumberBox
                         return true;
                     }
                     break;
+                case NumberBoxMinMaxMode.WrapEnabled:
+                    if (parsedNum < this.MinValue || parsedNum > this.MaxValue)
+                    {
+                        return true;
+                    }
+                    break;
             }
             return false;
         }
-
-
 
         // Performs Calculator Operations
         void EvaluateInput()

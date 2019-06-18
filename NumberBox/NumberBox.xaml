@@ -189,7 +189,7 @@
                                         </ObjectAnimationUsingKeyFrames>
                                     </Storyboard>
                                 </VisualState>
-                                <VisualState x:Name="DownSpinButtonCollapsed" />
+                                <VisualState x:Name="SpinButtonsCollapsed" />
                             </VisualStateGroup>
 
 
