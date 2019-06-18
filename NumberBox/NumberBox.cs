@@ -125,7 +125,7 @@ namespace NumberBox
             set { SetValue(SpinButtonPlacementModeProperty, value); }
         }
         public static readonly DependencyProperty SpinButtonPlacementModeProperty =
-            DependencyProperty.Register("UpDownPlacementMode", typeof(NumberBoxSpinButtonPlacementMode), typeof(NumberBox), new PropertyMetadata( NumberBoxSpinButtonPlacementMode.Hidden ));
+            DependencyProperty.Register("UpDownPlacementMode", typeof(NumberBoxSpinButtonPlacementMode), typeof(NumberBox), new PropertyMetadata(NumberBoxSpinButtonPlacementMode.Hidden, HasSpinnerUpdated ));
 
 
         public bool HyperScrollEnabled
@@ -225,14 +225,25 @@ namespace NumberBox
             ( (Button)DownSpinButton ).Click += new RoutedEventHandler( OnDownClick );
             ( (Button)UpSpinButton).Click += new RoutedEventHandler(OnUpClick);
 
-
-
             if ( state == NumberBoxSpinButtonPlacementMode.Inline )
             {
                 VisualStateManager.GoToState(this, "SpinButtonsVisible", false);
             }
 
 
+        }
+
+        private static void HasSpinnerUpdated(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            NumberBox numBox = d as NumberBox;
+            if ( numBox != null && numBox.SpinButtonPlacementMode == NumberBoxSpinButtonPlacementMode.Inline )
+            {
+                VisualStateManager.GoToState(numBox, "SpinButtonsVisible", false);
+            }
+            else if ( numBox != null && numBox.SpinButtonPlacementMode == NumberBoxSpinButtonPlacementMode.Hidden )
+            {
+                VisualStateManager.GoToState(numBox, "SpinButtonsCollapsed", false);
+            }
         }
 
         // Event handlers for spin button clicks
