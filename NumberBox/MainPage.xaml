@@ -57,7 +57,7 @@
 
             <TextBlock Grid.Row="6" Grid.Column="0" Text="Number Box - Min/Max Tests" Margin="10" HorizontalAlignment="Center" VerticalAlignment="Center" />
             
-            <local:NumberBox x:Name="BoxThree" Grid.Row="7" Grid.Column="0" Width="200" MinValue="0" MaxValue="10" MinMaxMode="WrapEnabled"  />
+            <local:NumberBox x:Name="BoxThree" Grid.Row="7" Grid.Column="0" Width="200" StepFrequency="2" MinValue="-5" MaxValue="10" MinMaxMode="WrapEnabled"  />
             <RelativePanel x:Name="ThreePanel" Grid.Row="7" Grid.Column="1">
                 <TextBlock x:Name="val" Text="Value: " />
                 <TextBlock x:Name="valnum" RelativePanel.RightOf="val" Margin="10,0,0,0" Text="{x:Bind BoxThree.Value , Mode=OneWay}"  />

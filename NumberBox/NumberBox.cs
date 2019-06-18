@@ -297,7 +297,14 @@ namespace NumberBox
             // Wrap value on step if applies
             if ( MinMaxMode == NumberBoxMinMaxMode.WrapEnabled && IsOutOfBounds(Value) )
             {
-                Value = Value - (MaxValue - MinValue) * Math.Floor(Value / (MaxValue - MinValue));
+                while ( Value > MaxValue )
+                {
+                    Value = MinValue + (Value - MaxValue) - 1;
+                }
+                while ( Value < MinValue )
+                {
+                    Value = MaxValue - Math.Abs(Value - MinValue) + 1;
+                }
             }
             this.Text = Value.ToString();
 
