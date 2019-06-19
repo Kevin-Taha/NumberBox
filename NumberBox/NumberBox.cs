@@ -237,14 +237,9 @@ namespace NumberBox
         protected override void OnApplyTemplate()
         {
             base.OnApplyTemplate();
-            // enable spinner buttons
+            // enable spinner buttons and hyperscroll
             SetSpinnerButtonsState(this.SpinButtonPlacementMode);
-
-            if ( HyperScrollEnabled )
-            {
-                this.PointerWheelChanged += new PointerEventHandler(OnScroll);
-            }
-
+            this.PointerWheelChanged += new PointerEventHandler(OnScroll);
             InitiateFormatter();
 
         }
@@ -292,6 +287,10 @@ namespace NumberBox
 
         void OnScroll(object sender, PointerRoutedEventArgs e)
         {
+            if (!HyperScrollEnabled)
+            {
+                return;
+            }
             int delta = e.GetCurrentPoint(this).Properties.MouseWheelDelta;
             if ( delta > 0 )
             {
