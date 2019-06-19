@@ -117,7 +117,8 @@ namespace NumberBox
         }
         // Using a DependencyProperty as the backing store for StepFrequency.  This enables animation, styling, binding, etc...
         public static readonly DependencyProperty StepFrequencyProperty =
-            DependencyProperty.Register("StepFrequency", typeof(double), typeof(NumberBox), new PropertyMetadata( (double) 1));
+            DependencyProperty.Register("StepFrequency", typeof(double), typeof(NumberBox), new PropertyMetadata( (double) 1, onStepChange));
+        
 
         public NumberBoxSpinButtonPlacementMode SpinButtonPlacementMode
         {
@@ -240,7 +241,19 @@ namespace NumberBox
             // enable spinner buttons and hyperscroll
             SetSpinnerButtonsState(this.SpinButtonPlacementMode);
             this.PointerWheelChanged += new PointerEventHandler(OnScroll);
+
+            // Handles default values set for Text or Value
             InitiateFormatter();
+
+            if (this.Text != null && this.Text != "")
+            {
+                ValidateInput(this, new RoutedEventArgs());
+            }
+            if (this.Value != 0)
+            {
+                this.Text = Formatter.FormatDouble(Value);
+            }
+
 
         }
 
@@ -502,6 +515,12 @@ namespace NumberBox
                     VisualStateManager.GoToState(numBox, "Normal", false);
                 }
             }
+        }
+
+        private static void onStepChange(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            NumberBox numBox = d as NumberBox;
+            Debug.Write(numBox.StepFrequency);
         }
 
         // Sets the Error State of the TextBox. 

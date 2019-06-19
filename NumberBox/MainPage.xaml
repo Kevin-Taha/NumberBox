@@ -48,7 +48,7 @@
             <TextBlock Grid.Row="0" Grid.Column="0" Text="Number Box - Default;" Margin="10" 
                    HorizontalAlignment="Center" VerticalAlignment="Center" />
             <TextBlock Grid.Row="1" Grid.Column="1" Text="{x:Bind BoxZero.Value , Mode=OneWay}" HorizontalAlignment="Center" VerticalAlignment="Center" Width="Auto"/>
-            <local:NumberBox  x:Name="BoxZero" Grid.Row="1" Grid.Column="0" Width="200" />
+            <local:NumberBox Text="5" x:Name="BoxZero" Grid.Row="1" Grid.Column="0" Width="200" />
 
             <TextBlock Grid.Row="2" Grid.Column="0" Margin="10,25,10,10" Text="Stepping NumBox - Increment/Decrement, Up/Down, HyperScroll" HorizontalAlignment="Center" VerticalAlignment="Center" />
             <local:NumberBox  x:Name="BoxOne"  Grid.Row="3" Grid.Column="0" Width="200" SpinButtonPlacementMode="Inline" StepFrequency="1" AcceptsCalculation="False" HyperScrollEnabled="True"  />
@@ -61,27 +61,14 @@
             <local:NumberBox x:Name="BoxTwo" Grid.Row="5" Grid.Column="0" Width="200" AcceptsCalculation="True" SignificantDigits="4"/>
             <TextBlock Grid.Row="5" Grid.Column="1" Text="{x:Bind BoxTwo.Value , Mode=OneWay}" HorizontalAlignment="Center" VerticalAlignment="Center" />
 
-            <TextBlock Grid.Row="6" Grid.Column="0" Text="Number Box - Min/Max Tests" Margin="10" HorizontalAlignment="Center" VerticalAlignment="Center" />
-            
-            <local:NumberBox  x:Name="BoxThree" Grid.Row="7" Grid.Column="0" Margin="0,0,0,30" Width="200" StepFrequency="2" MinValue="-5" MaxValue="10" MinMaxMode="WrapEnabled" HyperScrollEnabled="True" />
-            <RelativePanel x:Name="ThreePanel" Grid.Row="7" Grid.Column="1">
-                <TextBlock x:Name="val" Text="Value: " />
-                <TextBlock x:Name="valnum" RelativePanel.RightOf="val" Margin="10,0,0,0" Text="{x:Bind BoxThree.Value , Mode=OneWay}"  />
-
-                <TextBlock x:Name="min" RelativePanel.Below="val" Text="MinValue: " />
-                <TextBlock x:Name="minVal" RelativePanel.RightOf="min" RelativePanel.Below="val" Text="{x:Bind BoxThree.MinValue , Mode=OneWay}" />
-
-                <TextBlock x:Name="max" RelativePanel.Below="min" Text="MaxVal: " />
-                <TextBlock x:Name="maxVal" RelativePanel.RightOf="max" RelativePanel.Below="minVal" Text="{x:Bind BoxThree.MaxValue , Mode=OneWay}" />
-            </RelativePanel>
-            
+          
             
             <TextBlock x:Name="CustomBoxText" Grid.Row="8" Grid.Column="0" Text="Custom Box" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,50,0,0" />
             <local:NumberBox x:Name="CustomBox" Margin="100" Grid.Row="9" Grid.Column="0" Width="250"  
                              AcceptsCalculation="{x:Bind calculation.IsChecked, Converter={StaticResource BooleanConverter} , Mode=OneWay}"
                              SpinButtonPlacementMode="{x:Bind SpinButtons.SelectedValue, Converter={StaticResource SpinConverter}, Mode=OneWay}"
                              HyperScrollEnabled="{x:Bind hyperscroll.IsChecked, Converter={StaticResource BooleanConverter}, Mode=OneWay}"
-                             StepFrequency="{x:Bind StepFrequency.Value}"
+                             StepFrequency="{x:Bind freq.Value, Mode=OneWay}"
                              />
             <RelativePanel Grid.Row="8" Grid.Column="1" Grid.RowSpan="4" x:Name="CustomPanel" Background="BlanchedAlmond" CornerRadius="10" Padding="10" Margin="0,20,200,0" >
                 <TextBlock x:Name="val1" Text="Value: " />
@@ -94,16 +81,16 @@
                 </ComboBox>
 
                 <CheckBox x:Name="hyperscroll" Content="HyperScroll Enabled" RelativePanel.Below="SpinButtons"  />
-                <local:NumberBox Value="1" Header="Step Frequency" x:Name="StepFrequency" PlaceholderText="StepFrequency" RelativePanel.Below="hyperscroll" />
-                <ComboBox x:Name="minmax" PlaceholderText="MinMaxMode" RelativePanel.Below="StepFrequency" Margin="0,10,0,0" >
+                <local:NumberBox Value="1" Header="Step Frequency" Text="1" x:Name="freq" PlaceholderText="StepFrequency" RelativePanel.Below="hyperscroll" />
+                <ComboBox x:Name="minmax" PlaceholderText="MinMaxMode" RelativePanel.Below="freq" Margin="0,10,0,0" >
                     <x:String> None </x:String>
                     <x:String> Min Enabled </x:String>
                     <x:String> Max Enabled </x:String>
                     <x:String> Min And Max </x:String>
                     <x:String> Wrap Enabled </x:String>
                 </ComboBox>
-                <local:NumberBox Header="Max Value" x:Name="maxval" PlaceholderText="Max Value" RelativePanel.Below="minmax" Margin="0,10,0,0"/>
-                <local:NumberBox Header="Max Value" x:Name="minval" PlaceholderText="Min Value" RelativePanel.Below="maxval" Margin="0,10,0,0"/>
+                <local:NumberBox Header="Max Value" x:Name="maxval" Text="0" RelativePanel.Below="minmax" Margin="0,10,0,0"/>
+                <local:NumberBox Header="Max Value" x:Name="minval" Text="10" RelativePanel.Below="maxval" Margin="0,10,0,0"/>
 
 
                 <TextBlock x:Name="prectext" Text="Precision Properties" RelativePanel.RightOf="val1" Margin="175,0,0,0" />
