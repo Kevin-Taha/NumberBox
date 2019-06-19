@@ -77,35 +77,39 @@
             
             
             <TextBlock x:Name="CustomBoxText" Grid.Row="8" Grid.Column="0" Text="Custom Box" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,50,0,0" />
-            <local:NumberBox x:Name="CustomBox" Margin="10" Grid.Row="9" Grid.Column="0" Width="200" 
+            <local:NumberBox x:Name="CustomBox" Margin="100" Grid.Row="9" Grid.Column="0" Width="250"  
                              AcceptsCalculation="{x:Bind calculation.IsChecked, Converter={StaticResource BooleanConverter} , Mode=OneWay}"
                              SpinButtonPlacementMode="{x:Bind SpinButtons.SelectedValue, Converter={StaticResource SpinConverter}, Mode=OneWay}"
                              HyperScrollEnabled="{x:Bind hyperscroll.IsChecked, Converter={StaticResource BooleanConverter}, Mode=OneWay}"
+                             StepFrequency="{x:Bind StepFrequency.Value}"
                              />
             <RelativePanel Grid.Row="8" Grid.Column="1" Grid.RowSpan="4" x:Name="CustomPanel" Background="BlanchedAlmond" CornerRadius="10" Padding="10" Margin="0,20,200,0" >
                 <TextBlock x:Name="val1" Text="Value: " />
                 <TextBlock x:Name="valnum1" RelativePanel.RightOf="val1" Margin="10,0,0,0" Text="{x:Bind CustomBox.Value , Mode=OneWay}"  />
                 <CheckBox x:Name="validation" Content="Validation Enabled (WIP)" RelativePanel.Below="val1" IsChecked="True" IsEnabled="False" />
                 <CheckBox x:Name="calculation" Content="Calculations Enabled" RelativePanel.Below="validation" Margin="0,0,0,0"  />
-                <ComboBox x:Name="SpinButtons" SelectedValue="Hidden" PlaceholderText="SpinButtons Modes" RelativePanel.Below="calculation" >
+                <ComboBox Header="Spin Button State" x:Name="SpinButtons" SelectedValue="Hidden" PlaceholderText="SpinButtons Modes" RelativePanel.Below="calculation"  >
                     <x:String>Hidden</x:String>
                     <x:String>Inline</x:String>
                 </ComboBox>
 
                 <CheckBox x:Name="hyperscroll" Content="HyperScroll Enabled" RelativePanel.Below="SpinButtons"  />
-                <local:NumberBox x:Name="StepFrequency" PlaceholderText="StepFrequency" RelativePanel.Below="hyperscroll" />
-                <ComboBox x:Name="minmax" PlaceholderText="MinMaxMode" RelativePanel.Below="StepFrequency" >
+                <local:NumberBox Value="1" Header="Step Frequency" x:Name="StepFrequency" PlaceholderText="StepFrequency" RelativePanel.Below="hyperscroll" />
+                <ComboBox x:Name="minmax" PlaceholderText="MinMaxMode" RelativePanel.Below="StepFrequency" Margin="0,10,0,0" >
                     <x:String> None </x:String>
                     <x:String> Min Enabled </x:String>
                     <x:String> Max Enabled </x:String>
                     <x:String> Min And Max </x:String>
                     <x:String> Wrap Enabled </x:String>
                 </ComboBox>
+                <local:NumberBox Header="Max Value" x:Name="maxval" PlaceholderText="Max Value" RelativePanel.Below="minmax" Margin="0,10,0,0"/>
+                <local:NumberBox Header="Max Value" x:Name="minval" PlaceholderText="Min Value" RelativePanel.Below="maxval" Margin="0,10,0,0"/>
+
 
                 <TextBlock x:Name="prectext" Text="Precision Properties" RelativePanel.RightOf="val1" Margin="175,0,0,0" />
-                <local:NumberBox x:Name="frac" PlaceholderText="FractionDigits" RelativePanel.Below="prectext" RelativePanel.RightOf="val1" Margin="175,0,0,0" />
-                <local:NumberBox x:Name="integ" PlaceholderText="IntegerDigits" RelativePanel.Below="frac" RelativePanel.RightOf="val1" Margin="175,0,0,0" />
-                <local:NumberBox x:Name="dig" PlaceholderText="Significant Digits" RelativePanel.Below="integ" RelativePanel.RightOf="val1" Margin="175,0,0,0" />
+                <local:NumberBox Header="Fraction Digits" x:Name="frac" PlaceholderText="FractionDigits" RelativePanel.Below="prectext" RelativePanel.RightOf="val1" Margin="175,0,0,0" />
+                <local:NumberBox Header="Integer Digits" x:Name="integ" PlaceholderText="IntegerDigits" RelativePanel.Below="frac" RelativePanel.RightOf="val1" Margin="175,0,0,0" />
+                <local:NumberBox Header="Significant Digits" x:Name="dig" PlaceholderText="Significant Digits" RelativePanel.Below="integ" RelativePanel.RightOf="val1" Margin="175,0,0,0" />
                 <CheckBox x:Name="DecPoint" Content="IsDecimalPointAlwaysDisplayed" RelativePanel.Below="dig" RelativePanel.RightOf="val1" Margin="175,0,0,0" />
                 <CheckBox x:Name="zerosign" Content="IsZeroSigned" RelativePanel.Below="DecPoint" RelativePanel.RightOf="val1" Margin="175,0,0,0" />
 

@@ -360,6 +360,7 @@ namespace NumberBox
         {
             if (this.Text == "")
             {
+                Value = 0;
                 SetErrorState(false);
                 return;
             }
