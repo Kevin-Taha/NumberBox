@@ -20,6 +20,29 @@ namespace NumberBox
     /// <summary>
     /// An empty page that can be used on its own or navigated to within a Frame.
     /// </summary>
+    /// 
+
+    public class NullableBooleanToBooleanConverter : IValueConverter
+    {
+        public object Convert(object value, Type targetType, object parameter, string language)
+        {
+            if (value is bool?)
+            {
+                return (bool)value;
+            }
+            return false;
+        }
+
+        public object ConvertBack(object value, Type targetType, object parameter, string language)
+        {
+            if (value is bool)
+                return (bool)value;
+            return false;
+        }
+    }
+
+
+
     public sealed partial class MainPage : Page
     {
         public MainPage()
@@ -27,6 +50,26 @@ namespace NumberBox
             this.InitializeComponent();
             
         }
+
+
+        public class NullableBooleanToBooleanConverter : IValueConverter
+{
+    public object Convert(object value, Type targetType, object parameter, string language)
+    {
+        if (value is bool?)
+        {
+            return (bool)value;
+        }
+        return false;
+    }
+
+    public object ConvertBack(object value, Type targetType, object parameter, string language)
+    {
+        if (value is bool)
+            return (bool)value;
+        return false;
+    }
+}
 
 
     }

@@ -6,8 +6,12 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d"
+    xmlns:c="using:NumberBox.Converters"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
 
+    <Page.Resources>
+        <c:NullableBooleanToBooleanConverter x:Key="BooleanConverter" />
+    </Page.Resources>
 
     <RelativePanel>
         <TextBlock x:Name="TitleTextBlock"
@@ -19,7 +23,7 @@
         <Grid  RelativePanel.Below="TitleTextBlock" RelativePanel.AlignLeftWithPanel="True" RelativePanel.AlignRightWithPanel="True" Height="Auto">
 
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="Auto" />
                 <ColumnDefinition Width="*" />
             </Grid.ColumnDefinitions>
             <Grid.RowDefinitions>
@@ -31,10 +35,10 @@
                 <RowDefinition Height="*" />
                 <RowDefinition Height="*" />
                 <RowDefinition Height="*" />
-                <RowDefinition Height="*" />
-                <RowDefinition Height="*" />
-                <RowDefinition Height="*" />
-                <RowDefinition Height="*" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
 
 
             </Grid.RowDefinitions>
@@ -58,7 +62,7 @@
 
             <TextBlock Grid.Row="6" Grid.Column="0" Text="Number Box - Min/Max Tests" Margin="10" HorizontalAlignment="Center" VerticalAlignment="Center" />
             
-            <local:NumberBox x:Name="BoxThree" Grid.Row="7" Grid.Column="0" Width="200" StepFrequency="2" MinValue="-5" MaxValue="10" MinMaxMode="WrapEnabled" HyperScrollEnabled="True" />
+            <local:NumberBox  x:Name="BoxThree" Grid.Row="7" Grid.Column="0" Margin="0,0,0,30" Width="200" StepFrequency="2" MinValue="-5" MaxValue="10" MinMaxMode="WrapEnabled" HyperScrollEnabled="True" />
             <RelativePanel x:Name="ThreePanel" Grid.Row="7" Grid.Column="1">
                 <TextBlock x:Name="val" Text="Value: " />
                 <TextBlock x:Name="valnum" RelativePanel.RightOf="val" Margin="10,0,0,0" Text="{x:Bind BoxThree.Value , Mode=OneWay}"  />
@@ -71,14 +75,43 @@
             </RelativePanel>
             
             
-            <TextBlock x:Name="CustomBoxText" Grid.Row="8" Grid.Column="0" Text="Custom Box" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,50,0,0"/>
-            <local:NumberBox x:Name="CustomBox" Grid.Row="9" Grid.Column="0" Width="200"/>
-            <RelativePanel Grid.Row="8" Grid.Column="1" Grid.RowSpan="3" x:Name="CustomPanel" >
-                
-                
-                
-                
-                
+            <TextBlock x:Name="CustomBoxText" Grid.Row="8" Grid.Column="0" Text="Custom Box" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,50,0,0" />
+            <local:NumberBox x:Name="CustomBox" Margin="10" Grid.Row="9" Grid.Column="0" Width="200" AcceptsCalculation="{x:Bind calculation.IsChecked, Converter={StaticResource BooleanConverter} , Mode=OneWay}" />
+            <RelativePanel Grid.Row="8" Grid.Column="1" Grid.RowSpan="4" x:Name="CustomPanel" Background="BlanchedAlmond" CornerRadius="10" Padding="10" Margin="0,20,200,0" >
+                <TextBlock x:Name="val1" Text="Value: " />
+                <TextBlock x:Name="valnum1" RelativePanel.RightOf="val1" Margin="10,0,0,0" Text="{x:Bind CustomBox.Value , Mode=OneWay}"  />
+                <CheckBox x:Name="validation" Content="Validation Enabled (WIP)" RelativePanel.Below="val1" IsChecked="True" IsEnabled="False" />
+                <CheckBox x:Name="calculation" Content="Calculations Enabled" RelativePanel.Below="validation" Margin="0,0,0,0"  />
+                <CheckBox x:Name="SpinButtons" Content="Spin Buttons Enabled" RelativePanel.Below="calculation" />
+                <CheckBox x:Name="hyperscroll" Content="HyperScroll Enabled" RelativePanel.Below="SpinButtons"  />
+                <local:NumberBox x:Name="StepFrequency" PlaceholderText="StepFrequency" RelativePanel.Below="hyperscroll" />
+                <ComboBox x:Name="minmax" PlaceholderText="MinMaxMode" RelativePanel.Below="StepFrequency" >
+                    <x:String> None </x:String>
+                    <x:String> Min Enabled </x:String>
+                    <x:String> Max Enabled </x:String>
+                    <x:String> Min And Max </x:String>
+                    <x:String> Wrap Enabled </x:String>
+                </ComboBox>
+
+                <TextBlock x:Name="prectext" Text="Precision Properties" RelativePanel.RightOf="val1" Margin="175,0,0,0" />
+                <local:NumberBox x:Name="frac" PlaceholderText="FractionDigits" RelativePanel.Below="prectext" RelativePanel.RightOf="val1" Margin="175,0,0,0" />
+                <local:NumberBox x:Name="integ" PlaceholderText="IntegerDigits" RelativePanel.Below="frac" RelativePanel.RightOf="val1" Margin="175,0,0,0" />
+                <local:NumberBox x:Name="dig" PlaceholderText="Significant Digits" RelativePanel.Below="integ" RelativePanel.RightOf="val1" Margin="175,0,0,0" />
+                <CheckBox x:Name="DecPoint" Content="IsDecimalPointAlwaysDisplayed" RelativePanel.Below="dig" RelativePanel.RightOf="val1" Margin="175,0,0,0" />
+                <CheckBox x:Name="zerosign" Content="IsZeroSigned" RelativePanel.Below="DecPoint" RelativePanel.RightOf="val1" Margin="175,0,0,0" />
+
+                <ComboBox x:Name="rounding" PlaceholderText="Rounding Algorithm (TODO)" RelativePanel.Below="zerosign" RelativePanel.RightOf="val1" Margin="175,0,0,0" >
+                    <x:String>None</x:String>
+                </ComboBox>
+
+
+
+
+
+
+
+
+
             </RelativePanel>
 
 
