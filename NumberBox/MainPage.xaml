@@ -12,6 +12,7 @@
     <Page.Resources>
         <c:NullableBooleanToBooleanConverter x:Key="BooleanConverter" />
         <c:StringToNumberBoxSpinButtonPlacementModeConverter x:Key="SpinConverter" />
+        <c:StringToNumberBoxMinMaxModeConverter x:Key="MinMaxConverter" />
     </Page.Resources>
 
     <RelativePanel>
@@ -69,6 +70,9 @@
                              SpinButtonPlacementMode="{x:Bind SpinButtons.SelectedValue, Converter={StaticResource SpinConverter}, Mode=OneWay}"
                              HyperScrollEnabled="{x:Bind hyperscroll.IsChecked, Converter={StaticResource BooleanConverter}, Mode=OneWay}"
                              StepFrequency="{x:Bind freq.Value, Mode=OneWay}"
+                             MinMaxMode="{x:Bind minmax.SelectedValue, Converter={StaticResource MinMaxConverter}, Mode=OneWay}"
+                             MinValue="{x:Bind minval.Value, Mode=OneWay}"
+                             MaxValue="{x:Bind maxval.Value, Mode=OneWay}"
                              />
             <RelativePanel Grid.Row="8" Grid.Column="1" Grid.RowSpan="4" x:Name="CustomPanel" Background="BlanchedAlmond" CornerRadius="10" Padding="10" Margin="0,20,200,0" >
                 <TextBlock x:Name="val1" Text="Value: " />
@@ -82,15 +86,15 @@
 
                 <CheckBox x:Name="hyperscroll" Content="HyperScroll Enabled" RelativePanel.Below="SpinButtons"  />
                 <local:NumberBox Value="1" Header="Step Frequency" Text="1" x:Name="freq" PlaceholderText="StepFrequency" RelativePanel.Below="hyperscroll" />
-                <ComboBox x:Name="minmax" PlaceholderText="MinMaxMode" RelativePanel.Below="freq" Margin="0,10,0,0" >
-                    <x:String> None </x:String>
-                    <x:String> Min Enabled </x:String>
-                    <x:String> Max Enabled </x:String>
-                    <x:String> Min And Max </x:String>
-                    <x:String> Wrap Enabled </x:String>
+                <ComboBox Header="MinMax Mode" x:Name="minmax" PlaceholderText="MinMaxMode" SelectedValue="None" RelativePanel.Below="freq" Margin="0,10,0,0" >
+                    <x:String>None</x:String>
+                    <x:String>MinEnabled</x:String>
+                    <x:String>MaxEnabled</x:String>
+                    <x:String>MinAndMaxEnabled</x:String>
+                    <x:String>WrapEnabled</x:String>
                 </ComboBox>
-                <local:NumberBox Header="Max Value" x:Name="maxval" Text="0" RelativePanel.Below="minmax" Margin="0,10,0,0"/>
-                <local:NumberBox Header="Max Value" x:Name="minval" Text="10" RelativePanel.Below="maxval" Margin="0,10,0,0"/>
+                <local:NumberBox Header="Min Value" x:Name="minval" Text="0" RelativePanel.Below="minmax" Margin="0,10,0,0"/>
+                <local:NumberBox Header="Max Value" x:Name="maxval" Text="10" RelativePanel.Below="minval" Margin="0,10,0,0"/>
 
 
                 <TextBlock x:Name="prectext" Text="Precision Properties" RelativePanel.RightOf="val1" Margin="175,0,0,0" />
