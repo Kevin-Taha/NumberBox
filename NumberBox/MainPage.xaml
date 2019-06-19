@@ -33,7 +33,8 @@
                 <RowDefinition Height="*" />
                 <RowDefinition Height="*" />
                 <RowDefinition Height="*" />
-
+                <RowDefinition Height="*" />
+                <RowDefinition Height="*" />
 
 
             </Grid.RowDefinitions>
@@ -52,7 +53,7 @@
 
             <TextBlock Grid.Row="4" Grid.Column="0" Text="Number Box - Accepts Calculation;" Margin="10" 
                    HorizontalAlignment="Center" VerticalAlignment="Center" />
-            <local:NumberBox x:Name="BoxTwo" Grid.Row="5" Grid.Column="0" Width="200" AcceptsCalculation="True"/>
+            <local:NumberBox x:Name="BoxTwo" Grid.Row="5" Grid.Column="0" Width="200" AcceptsCalculation="True" SignificantDigits="4"/>
             <TextBlock Grid.Row="5" Grid.Column="1" Text="{x:Bind BoxTwo.Value , Mode=OneWay}" HorizontalAlignment="Center" VerticalAlignment="Center" />
 
             <TextBlock Grid.Row="6" Grid.Column="0" Text="Number Box - Min/Max Tests" Margin="10" HorizontalAlignment="Center" VerticalAlignment="Center" />
@@ -68,7 +69,17 @@
                 <TextBlock x:Name="max" RelativePanel.Below="min" Text="MaxVal: " />
                 <TextBlock x:Name="maxVal" RelativePanel.RightOf="max" RelativePanel.Below="minVal" Text="{x:Bind BoxThree.MaxValue , Mode=OneWay}" />
             </RelativePanel>
-
+            
+            
+            <TextBlock x:Name="CustomBoxText" Grid.Row="8" Grid.Column="0" Text="Custom Box" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,50,0,0"/>
+            <local:NumberBox x:Name="CustomBox" Grid.Row="9" Grid.Column="0" Width="200"/>
+            <RelativePanel Grid.Row="8" Grid.Column="1" Grid.RowSpan="3" x:Name="CustomPanel" >
+                
+                
+                
+                
+                
+            </RelativePanel>
 
 
 
