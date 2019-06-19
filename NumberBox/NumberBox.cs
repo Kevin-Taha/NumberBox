@@ -48,7 +48,7 @@ namespace NumberBox
 
     public sealed partial class NumberBox : TextBox
     {
-
+       
         /* Value Storage Properties
          * 
          */
@@ -150,31 +150,62 @@ namespace NumberBox
         /* Precision Properties
          * 
          */
-        public double DecimalPrecision
+
+        private DecimalFormatter Formatter { get; set; }
+        public int FractionDigits
         {
-            get { return (double)GetValue(DecimalPrecisionProperty); }
-            set { SetValue(DecimalPrecisionProperty, value); }
+            get { return (int)GetValue(FractionDigitsProperty); }
+            set { SetValue(FractionDigitsProperty, value); }
         }
-        public static readonly DependencyProperty DecimalPrecisionProperty =
-            DependencyProperty.Register( "DecimalPrecision", typeof(double), typeof(NumberBox), new PropertyMetadata((double) 0) );
+        public static readonly DependencyProperty FractionDigitsProperty =
+            DependencyProperty.Register("FractionDigits", typeof(int), typeof(NumberBox), new PropertyMetadata( (new DecimalFormatter()).FractionDigits, HasFormatterUpdated));
 
-
-        public bool AreLeadingZerosTrimmed
+        public int IntegerDigits
         {
-            get { return (bool)GetValue(AreLeadingZerosTrimmedProperty); }
-            set { SetValue(AreLeadingZerosTrimmedProperty, value); }
+            get { return (int)GetValue(IntegerDigitsProperty); }
+            set { SetValue(IntegerDigitsProperty, value); }
         }
-        public static readonly DependencyProperty AreLeadingZerosTrimmedProperty =
-            DependencyProperty.Register("AreLeadingZerosTrimmed", typeof(bool), typeof(NumberBox), new PropertyMetadata(true)); 
+        public static readonly DependencyProperty IntegerDigitsProperty =
+            DependencyProperty.Register("IntegerDigits", typeof(int), typeof(NumberBox), new PropertyMetadata( (new DecimalFormatter()).IntegerDigits, HasFormatterUpdated) );
 
 
-        public bool DoesInputRound
+        public int SignificantDigits
         {
-            get { return (bool)GetValue(DoesInputRoundProperty); }
-            set { SetValue(DoesInputRoundProperty, value); }
+            get { return (int)GetValue(SignificantDigitsProperty); }
+            set { SetValue(SignificantDigitsProperty, value); }
         }
-        public static readonly DependencyProperty DoesInputRoundProperty =
-            DependencyProperty.Register("DoesInputRound", typeof(bool), typeof(NumberBox), new PropertyMetadata(false));
+        public static readonly DependencyProperty SignificantDigitsProperty =
+            DependencyProperty.Register("SignificantDigits", typeof(int), typeof(NumberBox), new PropertyMetadata((new DecimalFormatter()).SignificantDigits, HasFormatterUpdated));
+
+
+        public bool IsDecimalPointAlwaysDisplayed
+        {
+            get { return (bool)GetValue(IsDecimalPointAlwaysDisplayedProperty); }
+            set { SetValue(IsDecimalPointAlwaysDisplayedProperty, value); }
+        }
+
+        public static readonly DependencyProperty IsDecimalPointAlwaysDisplayedProperty =
+            DependencyProperty.Register("IsDecimalPointAlwaysDisplayed", typeof(bool), typeof(NumberBox), new PropertyMetadata(false, HasFormatterUpdated));
+
+
+
+        public bool IsZeroSigned
+        {
+            get { return (bool)GetValue(IsZeroSignedProperty); }
+            set { SetValue(IsZeroSignedProperty, value); }
+        }
+
+        public static readonly DependencyProperty IsZeroSignedProperty =
+            DependencyProperty.Register("IsZeroSigned", typeof(bool), typeof(NumberBox), new PropertyMetadata(false, HasFormatterUpdated));
+
+        public RoundingAlgorithm RoundingAlgorithm
+        {
+            get { return (RoundingAlgorithm)GetValue(RoundingAlgorithmProperty); }
+            set { SetValue(RoundingAlgorithmProperty, value); }
+        }
+
+        public static readonly DependencyProperty RoundingAlgorithmProperty =
+            DependencyProperty.Register("RoundingAlgorithm", typeof(RoundingAlgorithm), typeof(NumberBox), new PropertyMetadata(null, HasFormatterUpdated));
 
 
         /* Calculation Properties
@@ -199,6 +230,7 @@ namespace NumberBox
             this.LostFocus += new RoutedEventHandler(ValidateInput);
             this.PointerExited += new PointerEventHandler(RefreshErrorState);
             this.KeyUp += new KeyEventHandler( KeyPressed );
+            this.Formatter = new DecimalFormatter();
 
         }
 
@@ -213,6 +245,7 @@ namespace NumberBox
                 this.PointerWheelChanged += new PointerEventHandler(OnScroll);
             }
 
+            InitiateFormatter();
 
         }
 
@@ -343,7 +376,7 @@ namespace NumberBox
                 EvaluateInput();
             }
 
-            DecimalFormatter df = new Windows.Globalization.NumberFormatting.DecimalFormatter();
+            DecimalFormatter df = this.Formatter;
             Nullable<double> parsedNum = df.ParseDouble(this.Text);
 
             // Give Validaton error if no match 
@@ -416,18 +449,43 @@ namespace NumberBox
         // Master function for handling all other input processing and precision settings
         void ProcessInput(double val)
         {
-            this.Value = val;
-
-            // Trim Zeros based on setting
-            if ( this.AreLeadingZerosTrimmed )
-            {
-                TrimZeroes();
-            }
-
-
+            this.Text = Formatter.Format(val);
+            this.Value = (double) Formatter.ParseDouble(this.Text);
         }
 
 
+        private void InitiateFormatter()
+        {
+            DecimalFormatter df = this.Formatter;
+            if ( df.FractionDigits != this.FractionDigits )
+                df.FractionDigits = this.FractionDigits;
+
+            if ( df.IntegerDigits != this.IntegerDigits )
+                df.IntegerDigits = this.IntegerDigits;
+
+            if ( df.SignificantDigits != this.SignificantDigits )
+                df.SignificantDigits = this.SignificantDigits;
+
+            if ( df.IsZeroSigned != this.IsZeroSigned )
+                df.IsZeroSigned = this.IsZeroSigned;
+
+            if ( df.IsDecimalPointAlwaysDisplayed != this.IsDecimalPointAlwaysDisplayed )
+                df.IsDecimalPointAlwaysDisplayed = this.IsDecimalPointAlwaysDisplayed;
+
+            if ( df.NumberRounder != null )
+            {
+                SignificantDigitsNumberRounder nr = new SignificantDigitsNumberRounder();
+                nr.RoundingAlgorithm = this.RoundingAlgorithm;
+                df.NumberRounder = nr;
+            }
+
+        }
+
+        private static void HasFormatterUpdated(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            NumberBox numBox = d as NumberBox;
+            numBox.InitiateFormatter();
+        }
 
         // Executed on change of HasError Property
         private static void HasErrorUpdated(DependencyObject d, DependencyPropertyChangedEventArgs e)
@@ -478,12 +536,6 @@ namespace NumberBox
             }
         }
 
-
-        // Trims zeroes if necessary and adds zeros to decimals that need it. 
-        void TrimZeroes()
-        {
-            this.Text = this.Value.ToString();
-        }
 
 
 
