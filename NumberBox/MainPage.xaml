@@ -13,6 +13,8 @@
         <c:NullableBooleanToBooleanConverter x:Key="BooleanConverter" />
         <c:StringToNumberBoxSpinButtonPlacementModeConverter x:Key="SpinConverter" />
         <c:StringToNumberBoxMinMaxModeConverter x:Key="MinMaxConverter" />
+        <c:StringToRoundingAlgConverter x:Key="RoundingConverter" />
+        <c:DoubleToIntConverter x:Key="ValueConverter" />
     </Page.Resources>
 
     <RelativePanel>
@@ -73,6 +75,11 @@
                              MinMaxMode="{x:Bind minmax.SelectedValue, Converter={StaticResource MinMaxConverter}, Mode=OneWay}"
                              MinValue="{x:Bind minval.Value, Mode=OneWay}"
                              MaxValue="{x:Bind maxval.Value, Mode=OneWay}"
+                             FractionDigits="{x:Bind frac.Value, Converter={StaticResource ValueConverter}, Mode=OneWay}"
+                             IntegerDigits="{x:Bind integ.Value, Converter={StaticResource ValueConverter}, Mode=OneWay}"
+                             SignificantDigits="{x:Bind dig.Value, Converter={StaticResource ValueConverter}, Mode=OneWay}"
+                             IsDecimalPointAlwaysDisplayed="{x:Bind DecPoint.IsChecked, Converter={StaticResource BooleanConverter}, Mode=OneWay}"
+                             IsZeroSigned="{x:Bind zerosign.IsChecked, Converter={StaticResource BooleanConverter}, Mode=OneWay}"
                              />
             <RelativePanel Grid.Row="8" Grid.Column="1" Grid.RowSpan="4" x:Name="CustomPanel" Background="BlanchedAlmond" CornerRadius="10" Padding="10" Margin="0,20,200,0" >
                 <TextBlock x:Name="val1" Text="Value: " />
