@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Windows.Globalization.NumberFormatting;
 using Windows.UI.Xaml.Data;
 
 
@@ -104,6 +105,95 @@ namespace NumberBox.Converters
             return false;
         }
     }
+
+
+    public class DoubleToIntConverter : IValueConverter
+    {
+        public object Convert(object value, Type targetType, object parameter, string language)
+        {
+            if (value is double)
+            {
+                return System.Convert.ToInt32(value);
+            }
+            return false;
+        }
+
+        public object ConvertBack(object value, Type targetType, object parameter, string language)
+        {
+            if (value is int)
+                return System.Convert.ToDouble(value);
+            return false;
+        }
+    }
+
+   public class StringToRoundingAlgConverter : IValueConverter
+    {
+        public object Convert(object value, Type targetType, object parameter, string language)
+        {
+            if (value is String)
+            {
+                switch (value)
+                {
+                    case "None":
+                        return RoundingAlgorithm.None;
+                    case "RoundAwayFromZero":
+                        return RoundingAlgorithm.RoundAwayFromZero;
+                    case "RoundDown":
+                        return RoundingAlgorithm.RoundDown;
+                    case "RoundHalfAwayFromZero":
+                        return RoundingAlgorithm.RoundHalfAwayFromZero;
+                    case "RoundHalfDown":
+                        return RoundingAlgorithm.RoundHalfDown;
+                    case "RoundHalfToEven":
+                        return RoundingAlgorithm.RoundHalfToEven;
+                    case "RoundHalfToOdd":
+                        return RoundingAlgorithm.RoundHalfToOdd;
+                    case "RoundHalfTowardsZero":
+                        return RoundingAlgorithm.RoundHalfTowardsZero;
+                    case "RoundHalfUp":
+                        return RoundingAlgorithm.RoundHalfUp;
+                    case "RoundTowardsZero":
+                        return RoundingAlgorithm.RoundTowardsZero;
+                    case "RoundUp":
+                        return RoundingAlgorithm.RoundUp;
+                }
+            }
+            return false;
+        }
+        public object ConvertBack(object value, Type targetType, object parameter, string language)
+        {
+            if (value is RoundingAlgorithm)
+            {
+                switch (value)
+                {
+                    case RoundingAlgorithm.None:
+                        return "None";
+                    case RoundingAlgorithm.RoundAwayFromZero:
+                        return "RoundAwayFromZero";
+                    case RoundingAlgorithm.RoundDown:
+                        return "RoundDown";
+                    case RoundingAlgorithm.RoundHalfAwayFromZero:
+                        return "RoundHalfAwayFromZero";
+                    case RoundingAlgorithm.RoundHalfDown:
+                        return "RoundHalfDown";
+                    case RoundingAlgorithm.RoundHalfToEven:
+                        return "RoundHalfToEven";
+                    case RoundingAlgorithm.RoundHalfToOdd:
+                        return "RoundHalfToOdd";
+                    case RoundingAlgorithm.RoundHalfTowardsZero:
+                        return "RoundHalfTowardsZero";
+                    case RoundingAlgorithm.RoundHalfUp:
+                        return "RoundHalfUp";
+                    case RoundingAlgorithm.RoundTowardsZero:
+                        return "RoundTowardsZero";
+                    case RoundingAlgorithm.RoundUp:
+                        return "RoundUp";
+                }
+            }
+            return false;
+        }
+    }
+
 
 
 }
