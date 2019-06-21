@@ -106,7 +106,6 @@ namespace NumberBox.Converters
         }
     }
 
-
     public class DoubleToIntConverter : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, string language)
@@ -194,6 +193,46 @@ namespace NumberBox.Converters
         }
     }
 
+    public class StringToValidationModeConverter : IValueConverter
+    {
+        public object Convert(object value, Type targetType, object parameter, string language)
+        {
+            if (value is String)
+            {
+                switch (value)
+                {
+                    case "Disabled":
+                        return NumberBoxBasicValidationMode.Disabled;
+                    case "IconMessage":
+                        return NumberBoxBasicValidationMode.IconMessage;
+                    case "TextBlockMessage":
+                        return NumberBoxBasicValidationMode.TextBlockMessage;
+                    case "InvalidInputOverwritten":
+                        return NumberBoxBasicValidationMode.InvalidInputOverwritten;
 
+                }
+            }
+            return false;
+        }
+        public object ConvertBack(object value, Type targetType, object parameter, string language)
+        {
+            if (value is NumberBoxMinMaxMode)
+            {
+                switch (value)
+                {
+                    case NumberBoxBasicValidationMode.Disabled:
+                        return "Disabled";
+                    case NumberBoxBasicValidationMode.IconMessage:
+                        return "IconMessage";
+                    case NumberBoxBasicValidationMode.TextBlockMessage:
+                        return "TextBlockMessage";
+                    case NumberBoxBasicValidationMode.InvalidInputOverwritten:
+                        return "InvalidInputOverwritten";
+
+                }
+            }
+            return false;
+        }
+    }
 
 }

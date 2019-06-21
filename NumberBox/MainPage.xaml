@@ -15,6 +15,7 @@
         <c:StringToNumberBoxMinMaxModeConverter x:Key="MinMaxConverter" />
         <c:StringToRoundingAlgConverter x:Key="RoundingConverter" />
         <c:DoubleToIntConverter x:Key="ValueConverter" />
+        <c:StringToValidationModeConverter x:Key="ValidationConverter" />
     </Page.Resources>
 
     <RelativePanel>
@@ -68,6 +69,7 @@
             
             <TextBlock x:Name="CustomBoxText" Grid.Row="8" Grid.Column="0" Text="Custom Box" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,50,0,0" />
             <local:NumberBox x:Name="CustomBox" Margin="100" Grid.Row="9" Grid.Column="0" Width="250"  
+                             BasicValidationMode="{x:Bind validation.SelectedValue, Converter={StaticResource ValidationConverter}, Mode=OneWay}"
                              AcceptsCalculation="{x:Bind calculation.IsChecked, Converter={StaticResource BooleanConverter} , Mode=OneWay}"
                              SpinButtonPlacementMode="{x:Bind SpinButtons.SelectedValue, Converter={StaticResource SpinConverter}, Mode=OneWay}"
                              HyperScrollEnabled="{x:Bind hyperscroll.IsChecked, Converter={StaticResource BooleanConverter}, Mode=OneWay}"
@@ -86,7 +88,22 @@
             <RelativePanel Grid.Row="8" Grid.Column="1" Grid.RowSpan="4" x:Name="CustomPanel" Background="BlanchedAlmond" CornerRadius="10" Padding="10" Margin="0,20,200,0" >
                 <TextBlock x:Name="val1" Text="Value: " />
                 <TextBlock x:Name="valnum1" RelativePanel.RightOf="val1" Margin="10,0,0,0" Text="{x:Bind CustomBox.Value , Mode=OneWay}"  />
-                <CheckBox x:Name="validation" Content="Validation Enabled (WIP)" RelativePanel.Below="val1" IsChecked="True" IsEnabled="False" />
+
+                <ComboBox x:Name="validation" Header="Validation Enabled" RelativePanel.Below="val1" SelectedValue="TextBlockMessage">
+                    <x:String>TextBlockMessage</x:String>
+                    <x:String>IconMessage</x:String>
+                    <x:String>InvalidInputOverwritten</x:String>
+                    <x:String>Disabled</x:String>
+                </ComboBox>
+                <Button Content="?" CornerRadius="90" RelativePanel.RightOf="validation" Width="30" Height="30" RelativePanel.Below="valnum1">
+                    <Button.Flyout>
+                        <Flyout>
+                                <TextBlock Style="{ThemeResource BaseTextBlockStyle}" Text="Custom TextBlock and Icon Messsages are currently unimplemented, only red border highl" Margin="0,0,0,12" />
+                        </Flyout>
+                    </Button.Flyout>
+                </Button>
+
+
                 <CheckBox x:Name="calculation" Content="Calculations Enabled" RelativePanel.Below="validation" Margin="0,0,0,0"  />
                 <ComboBox Header="Spin Button State" x:Name="SpinButtons" SelectedValue="Hidden" PlaceholderText="SpinButtons Modes" RelativePanel.Below="calculation"  >
                     <x:String>Hidden</x:String>

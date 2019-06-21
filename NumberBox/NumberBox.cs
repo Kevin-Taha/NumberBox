@@ -33,6 +33,7 @@ namespace NumberBox
     };
     
 
+    // Boundary States for min and max modes. Number wrapping only occurs on stepping if WrapEnabled. 
     public enum NumberBoxMinMaxMode
     {
         None,
@@ -41,6 +42,16 @@ namespace NumberBox
         MinAndMaxEnabled,
         WrapEnabled
     }
+
+
+    // Validation modes, IconMessage and TextBlockMessage are not fully implemented - just yielding red borders. Waiting for Validation PR. 
+    public enum NumberBoxBasicValidationMode
+    {
+        InvalidInputOverwritten,
+        IconMessage,
+        TextBlockMessage, 
+        Disabled
+    };
 
 
 
@@ -63,21 +74,15 @@ namespace NumberBox
         /* Validation properties
          * 
          */
-        public bool BasicValidationEnabled
+        public NumberBoxBasicValidationMode BasicValidationMode
         {
-            get { return (bool)GetValue(BasicValidationEnabledProperty); }
-            set { SetValue(BasicValidationEnabledProperty, value); }
+            get { return (NumberBoxBasicValidationMode)GetValue(BasicValidationModeProperty); }
+            set { SetValue(BasicValidationModeProperty, value); }
         }
-        public static readonly DependencyProperty BasicValidationEnabledProperty =
-            DependencyProperty.Register("BasicValidationEnabled", typeof(bool), typeof(NumberBox), new PropertyMetadata( (bool) true ) );
 
-        public bool IsInvalidInputOverwritten
-        {
-            get { return (bool)GetValue(IsInvalidInputOverwrittenProperty); }
-            set { SetValue(IsInvalidInputOverwrittenProperty, value); }
-        }
-        public static readonly DependencyProperty IsInvalidInputOverwrittenProperty =
-            DependencyProperty.Register("IsInvalidInputOverwritten", typeof(bool), typeof(NumberBox), new PropertyMetadata( (bool) false));
+        public static readonly DependencyProperty BasicValidationModeProperty =
+            DependencyProperty.Register("BasicValidationMode", typeof(NumberBoxBasicValidationMode), typeof(NumberBox), new PropertyMetadata(NumberBoxBasicValidationMode.IconMessage));
+
         public bool HasError
         {
             get { return (bool)GetValue(HasErrorProperty); }
@@ -113,9 +118,8 @@ namespace NumberBox
             get { return (double) GetValue(StepFrequencyProperty); }
             set { SetValue(StepFrequencyProperty, value); }
         }
-        // Using a DependencyProperty as the backing store for StepFrequency.  This enables animation, styling, binding, etc...
         public static readonly DependencyProperty StepFrequencyProperty =
-            DependencyProperty.Register("StepFrequency", typeof(double), typeof(NumberBox), new PropertyMetadata( (double) 1, onStepChange));
+            DependencyProperty.Register("StepFrequency", typeof(double), typeof(NumberBox), new PropertyMetadata( (double) 1));
         
 
         public NumberBoxSpinButtonPlacementMode SpinButtonPlacementMode
@@ -132,7 +136,6 @@ namespace NumberBox
             get { return (bool)GetValue(HyperScrollEnabledProperty); }
             set { SetValue(HyperScrollEnabledProperty, value); }
         }
-        // Using a DependencyProperty as the backing store for HyperScrollEnabled.  This enables animation, styling, binding, etc...
         public static readonly DependencyProperty HyperScrollEnabledProperty =
             DependencyProperty.Register("HyperScrollEnabled", typeof(bool), typeof(NumberBox), new PropertyMetadata(false));
 
@@ -369,7 +372,9 @@ namespace NumberBox
         // Uses DecimalFormatter to validate that input is compliant
         void ValidateInput(object sender, RoutedEventArgs e)
         {
-            if (this.Text == "")
+            bool isEval = false;
+            // Handles case for empty textbox, should remain valid and treated by value as 0 input for now
+            if (this.Text == "" && !IsOutOfBounds(0) )
             {
                 Value = 0;
                 SetErrorState(false);
@@ -377,7 +382,7 @@ namespace NumberBox
             }
 
 
-            if ( !BasicValidationEnabled )
+            if ( BasicValidationMode == NumberBoxBasicValidationMode.Disabled )
             {
                 return;
             }
@@ -385,6 +390,7 @@ namespace NumberBox
             if ( AcceptsCalculation )
             {
                 EvaluateInput();
+                isEval = true;
             }
 
             DecimalFormatter df = this.Formatter;
@@ -393,11 +399,20 @@ namespace NumberBox
             // Give Validaton error if no match 
             if ( parsedNum == null || IsOutOfBounds( (double) parsedNum) )
             {
+                // Overwrite with last  value when invalid value is parsed
+                if ( BasicValidationMode == NumberBoxBasicValidationMode.InvalidInputOverwritten && !isEval )
+                {
+                    SetErrorState(false);
+                    ProcessInput(Value);
+                    return;
+                }
+
                 SetErrorState(true);
 
             }
             else
             {
+                // Set Valid state and start input processing
                 SetErrorState(false);
                 ProcessInput( (double) parsedNum);
             }
@@ -483,7 +498,7 @@ namespace NumberBox
             if ( df.IsDecimalPointAlwaysDisplayed != this.IsDecimalPointAlwaysDisplayed )
                 df.IsDecimalPointAlwaysDisplayed = this.IsDecimalPointAlwaysDisplayed;
 
-            // Set Rounding algorithm. For some reason this throws an inexplicable invalid parameter exception so just gonna try-catch
+            // Set Rounding algorithm. For some reason this throws an inexplicable invalid parameter exception so using try-catch for now
             try
             {
                 SignificantDigitsNumberRounder nr = new SignificantDigitsNumberRounder();
@@ -496,6 +511,7 @@ namespace NumberBox
 
         }
 
+        // Reconstructs formatter if settings for it have changed
         private static void HasFormatterUpdated(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
             NumberBox numBox = d as NumberBox;
@@ -517,12 +533,6 @@ namespace NumberBox
                     VisualStateManager.GoToState(numBox, "Normal", false);
                 }
             }
-        }
-
-        private static void onStepChange(DependencyObject d, DependencyPropertyChangedEventArgs e)
-        {
-            NumberBox numBox = d as NumberBox;
-            Debug.Write(numBox.StepFrequency);
         }
 
         // Sets the Error State of the TextBox. 
