@@ -17,12 +17,10 @@ using System.Threading.Tasks;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Input;
-using System.Text.RegularExpressions;
 using System.Diagnostics;
 using Windows.Globalization.NumberFormatting;
 using System.Data;
-using System.Runtime.InteropServices.ComTypes;
-using Windows.UI.Input;
+
 
 namespace NumberBox
 {
@@ -206,7 +204,7 @@ namespace NumberBox
         }
 
         public static readonly DependencyProperty RoundingAlgorithmProperty =
-            DependencyProperty.Register("RoundingAlgorithm", typeof(RoundingAlgorithm), typeof(NumberBox), new PropertyMetadata(null, HasFormatterUpdated));
+            DependencyProperty.Register("RoundingAlgorithm", typeof(RoundingAlgorithm), typeof(NumberBox), new PropertyMetadata(RoundingAlgorithm.None, HasFormatterUpdated));
 
 
         /* Calculation Properties
@@ -485,12 +483,16 @@ namespace NumberBox
             if ( df.IsDecimalPointAlwaysDisplayed != this.IsDecimalPointAlwaysDisplayed )
                 df.IsDecimalPointAlwaysDisplayed = this.IsDecimalPointAlwaysDisplayed;
 
-            if ( df.NumberRounder != null )
+            // Set Rounding algorithm. For some reason this throws an inexplicable invalid parameter exception so just gonna try-catch
+            try
             {
                 SignificantDigitsNumberRounder nr = new SignificantDigitsNumberRounder();
                 nr.RoundingAlgorithm = this.RoundingAlgorithm;
                 df.NumberRounder = nr;
             }
+            catch (Exception){}
+
+            
 
         }
 

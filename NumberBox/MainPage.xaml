@@ -80,6 +80,8 @@
                              SignificantDigits="{x:Bind dig.Value, Converter={StaticResource ValueConverter}, Mode=OneWay}"
                              IsDecimalPointAlwaysDisplayed="{x:Bind DecPoint.IsChecked, Converter={StaticResource BooleanConverter}, Mode=OneWay}"
                              IsZeroSigned="{x:Bind zerosign.IsChecked, Converter={StaticResource BooleanConverter}, Mode=OneWay}"
+                             RoundingAlgorithm="{x:Bind rounding.SelectedValue, Converter={StaticResource RoundingConverter}, Mode=OneWay}"
+                             
                              />
             <RelativePanel Grid.Row="8" Grid.Column="1" Grid.RowSpan="4" x:Name="CustomPanel" Background="BlanchedAlmond" CornerRadius="10" Padding="10" Margin="0,20,200,0" >
                 <TextBlock x:Name="val1" Text="Value: " />
@@ -105,14 +107,24 @@
 
 
                 <TextBlock x:Name="prectext" Text="Precision Properties" RelativePanel.RightOf="val1" Margin="175,0,0,0" />
-                <local:NumberBox Header="Fraction Digits" x:Name="frac" PlaceholderText="FractionDigits" RelativePanel.Below="prectext" RelativePanel.RightOf="val1" Margin="175,0,0,0" />
-                <local:NumberBox Header="Integer Digits" x:Name="integ" PlaceholderText="IntegerDigits" RelativePanel.Below="frac" RelativePanel.RightOf="val1" Margin="175,0,0,0" />
+                <local:NumberBox Value="2" Header="Fraction Digits" x:Name="frac" PlaceholderText="FractionDigits" RelativePanel.Below="prectext" RelativePanel.RightOf="val1" Margin="175,0,0,0" />
+                <local:NumberBox Value="1" Header="Integer Digits" x:Name="integ" PlaceholderText="IntegerDigits" RelativePanel.Below="frac" RelativePanel.RightOf="val1" Margin="175,0,0,0" />
                 <local:NumberBox Header="Significant Digits" x:Name="dig" PlaceholderText="Significant Digits" RelativePanel.Below="integ" RelativePanel.RightOf="val1" Margin="175,0,0,0" />
                 <CheckBox x:Name="DecPoint" Content="IsDecimalPointAlwaysDisplayed" RelativePanel.Below="dig" RelativePanel.RightOf="val1" Margin="175,0,0,0" />
                 <CheckBox x:Name="zerosign" Content="IsZeroSigned" RelativePanel.Below="DecPoint" RelativePanel.RightOf="val1" Margin="175,0,0,0" />
 
-                <ComboBox x:Name="rounding" PlaceholderText="Rounding Algorithm (TODO)" RelativePanel.Below="zerosign" RelativePanel.RightOf="val1" Margin="175,0,0,0" >
+                <ComboBox x:Name="rounding" SelectedValue="None" PlaceholderText="Rounding Algorithm (TODO)" RelativePanel.Below="zerosign" RelativePanel.RightOf="val1" Margin="175,0,0,0" >
                     <x:String>None</x:String>
+                    <x:String>RoundAwayFromZero</x:String>
+                    <x:String>RoundDown</x:String>
+                    <x:String>RoundHalfAwayFromZero</x:String>
+                    <x:String>RoundHalfDown</x:String>
+                    <x:String>RoundHalfToEven</x:String>
+                    <x:String>RoundHalfToOdd</x:String>
+                    <x:String>RoundHalfTowardsZero</x:String>
+                    <x:String>RoundHalfUp</x:String>
+                    <x:String>RoundTowardsZero</x:String>
+                    <x:String>RoundUp</x:String>
                 </ComboBox>
 
 
