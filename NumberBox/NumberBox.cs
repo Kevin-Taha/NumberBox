@@ -53,6 +53,11 @@ namespace NumberBox
         Disabled
     };
 
+    public enum NumberBoxNumberRounder
+    {
+        IncrementNumberRounder,
+        SignificantDigitsNumberRounder
+    }
 
 
     public sealed partial class NumberBox : TextBox
@@ -189,8 +194,6 @@ namespace NumberBox
         public static readonly DependencyProperty IsDecimalPointAlwaysDisplayedProperty =
             DependencyProperty.Register("IsDecimalPointAlwaysDisplayed", typeof(bool), typeof(NumberBox), new PropertyMetadata(false, HasFormatterUpdated));
 
-
-
         public bool IsZeroSigned
         {
             get { return (bool)GetValue(IsZeroSignedProperty); }
@@ -200,6 +203,12 @@ namespace NumberBox
         public static readonly DependencyProperty IsZeroSignedProperty =
             DependencyProperty.Register("IsZeroSigned", typeof(bool), typeof(NumberBox), new PropertyMetadata(false, HasFormatterUpdated));
 
+
+
+        /* Rounding Properties
+         * 
+         */
+
         public RoundingAlgorithm RoundingAlgorithm
         {
             get { return (RoundingAlgorithm)GetValue(RoundingAlgorithmProperty); }
@@ -208,6 +217,35 @@ namespace NumberBox
 
         public static readonly DependencyProperty RoundingAlgorithmProperty =
             DependencyProperty.Register("RoundingAlgorithm", typeof(RoundingAlgorithm), typeof(NumberBox), new PropertyMetadata(RoundingAlgorithm.None, HasFormatterUpdated));
+
+        public NumberBoxNumberRounder NumberRounder
+        {
+            get { return (NumberBoxNumberRounder)GetValue(NumberRounderProperty); }
+            set { SetValue(NumberRounderProperty, value); }
+        }
+        public static readonly DependencyProperty NumberRounderProperty =
+            DependencyProperty.Register("NumberRounder", typeof(NumberBoxNumberRounder), typeof(NumberBox), new PropertyMetadata(NumberBoxNumberRounder.IncrementNumberRounder, HasFormatterUpdated));
+
+
+        public double IncrementPrecision
+        {
+            get { return (double)GetValue(IncrementPrecisionProperty); }
+            set { SetValue(IncrementPrecisionProperty, value); }
+        }
+        public static readonly DependencyProperty IncrementPrecisionProperty =
+            DependencyProperty.Register("IncrementPrecision", typeof(double), typeof(NumberBox), new PropertyMetadata(1, HasFormatterUpdated));
+
+
+        public uint SignificantDigitPrecision
+        {
+            get { return (uint)GetValue(SignificantDigitPrecisionProperty); }
+            set { SetValue(SignificantDigitPrecisionProperty, value); }
+        }
+        public static readonly DependencyProperty SignificantDigitPrecisionProperty =
+            DependencyProperty.Register("SignificantDigitPrecision", typeof(uint), typeof(NumberBox), new PropertyMetadata(1, HasFormatterUpdated));
+
+
+
 
 
         /* Calculation Properties
@@ -503,6 +541,7 @@ namespace NumberBox
             {
                 SignificantDigitsNumberRounder nr = new SignificantDigitsNumberRounder();
                 nr.RoundingAlgorithm = this.RoundingAlgorithm;
+                nr.SignificantDigits = SignificantDigitPrecision;
                 df.NumberRounder = nr;
             }
             catch (Exception){}
