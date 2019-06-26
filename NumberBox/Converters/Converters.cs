@@ -269,4 +269,31 @@ namespace NumberBox.Converters
         }
     }
 
+
+
+
+    public class DoubleToUIntConverter : IValueConverter
+    {
+        public object Convert(object value, Type targetType, object parameter, string language)
+        {
+            if (value is double)
+            {
+                return System.Convert.ToUInt32(value);
+            }
+            return false;
+        }
+
+        public object ConvertBack(object value, Type targetType, object parameter, string language)
+        {
+            if (value is int)
+                return System.Convert.ToDouble(value);
+            return false;
+        }
+    }
+
+
+
+
+
+
 }

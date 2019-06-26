@@ -17,6 +17,7 @@
         <c:DoubleToIntConverter x:Key="ValueConverter" />
         <c:StringToValidationModeConverter x:Key="ValidationConverter" />
         <c:StringToRounderConverter x:Key="RounderConverter" />
+        <c:DoubleToUIntConverter x:Key="UintConverter" />
     </Page.Resources>
 
     <RelativePanel>
@@ -84,6 +85,8 @@
                              IsDecimalPointAlwaysDisplayed="{x:Bind DecPoint.IsChecked, Converter={StaticResource BooleanConverter}, Mode=OneWay}"
                              IsZeroSigned="{x:Bind zerosign.IsChecked, Converter={StaticResource BooleanConverter}, Mode=OneWay}"
                              RoundingAlgorithm="{x:Bind rounding.SelectedValue, Converter={StaticResource RoundingConverter}, Mode=OneWay}"
+                             IncrementPrecision="{x:Bind increment.Value, Mode=OneWay}"
+                             SignificantDigitPrecision="{x:Bind sigfig.Value, Converter={StaticResource UintConverter}, Mode=OneWay}"
                              
                              />
             <RelativePanel Grid.Row="8" Grid.Column="1" Grid.RowSpan="4" x:Name="CustomPanel" Background="BlanchedAlmond" CornerRadius="10" Padding="10" Margin="0,20,200,0" >

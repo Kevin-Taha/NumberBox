@@ -20,7 +20,7 @@ using Windows.UI.Xaml.Input;
 using System.Diagnostics;
 using Windows.Globalization.NumberFormatting;
 using System.Data;
-
+using Windows.Graphics.Printing3D;
 
 namespace NumberBox
 {
@@ -233,7 +233,7 @@ namespace NumberBox
             set { SetValue(IncrementPrecisionProperty, value); }
         }
         public static readonly DependencyProperty IncrementPrecisionProperty =
-            DependencyProperty.Register("IncrementPrecision", typeof(double), typeof(NumberBox), new PropertyMetadata(1, HasFormatterUpdated));
+            DependencyProperty.Register("IncrementPrecision", typeof(double), typeof(NumberBox), new PropertyMetadata( (double) 1, HasFormatterUpdated));
 
 
         public uint SignificantDigitPrecision
@@ -537,16 +537,8 @@ namespace NumberBox
                 df.IsDecimalPointAlwaysDisplayed = this.IsDecimalPointAlwaysDisplayed;
 
             // Set Rounding algorithm. For some reason this throws an inexplicable invalid parameter exception so using try-catch for now
-            try
-            {
-                SignificantDigitsNumberRounder nr = new SignificantDigitsNumberRounder();
-                nr.RoundingAlgorithm = this.RoundingAlgorithm;
-                nr.SignificantDigits = SignificantDigitPrecision;
-                df.NumberRounder = nr;
-            }
-            catch (Exception){}
+            setRounder();
 
-            
 
         }
 
@@ -607,7 +599,35 @@ namespace NumberBox
         }
 
 
+        void setRounder()
+        {
+            // Prevents an exception from being thrown
+            if (RoundingAlgorithm == RoundingAlgorithm.None )
+            {
+                Formatter.NumberRounder = null;
+                return;
+            }
 
+
+            if ( this.NumberRounder == NumberBoxNumberRounder.IncrementNumberRounder )
+            {
+                IncrementNumberRounder nr = new IncrementNumberRounder();
+                if (this.IncrementPrecision != 0 )
+                    nr.Increment = this.IncrementPrecision;
+                nr.RoundingAlgorithm = this.RoundingAlgorithm;
+                Formatter.NumberRounder = nr;
+            }
+            else
+            {
+                SignificantDigitsNumberRounder nr = new SignificantDigitsNumberRounder();
+                if ( this.SignificantDigitPrecision != 0)
+                    nr.SignificantDigits = this.SignificantDigitPrecision;
+                nr.RoundingAlgorithm = this.RoundingAlgorithm;
+                Formatter.NumberRounder = nr;
+
+            }
+
+        }
 
     }
 }
