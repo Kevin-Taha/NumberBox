@@ -31,17 +31,17 @@
 
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto" />
-                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
             <Grid.RowDefinitions>
-                <RowDefinition Height="*" />
-                <RowDefinition Height="*" />
-                <RowDefinition Height="*" />
-                <RowDefinition Height="*" />
-                <RowDefinition Height="*" />
-                <RowDefinition Height="*" />
-                <RowDefinition Height="*" />
-                <RowDefinition Height="*" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="Auto" />
@@ -69,8 +69,8 @@
 
           
             
-            <TextBlock x:Name="CustomBoxText" Grid.Row="8" Grid.Column="0" Text="Custom Box" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,50,0,0" />
-            <local:NumberBox x:Name="CustomBox" Margin="100" Grid.Row="9" Grid.Column="0" Width="250"  
+            <TextBlock x:Name="CustomBoxText" Grid.Row="8" Grid.Column="0" Text="NumberBox - Adjustable" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,50,0,0" />
+            <local:NumberBox x:Name="CustomBox" Grid.Row="9" Grid.Column="0" Width="250"  Height="Auto" Margin="150"
                              BasicValidationMode="{x:Bind validation.SelectedValue, Converter={StaticResource ValidationConverter}, Mode=OneWay}"
                              AcceptsCalculation="{x:Bind calculation.IsChecked, Converter={StaticResource BooleanConverter} , Mode=OneWay}"
                              SpinButtonPlacementMode="{x:Bind SpinButtons.SelectedValue, Converter={StaticResource SpinConverter}, Mode=OneWay}"
