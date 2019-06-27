@@ -495,6 +495,11 @@ namespace NumberBox
         // Performs Calculator Operations
         void EvaluateInput()
         {
+            if (this.Text.Equals("-0") && IsZeroSigned)
+            {
+                return;
+            }
+
             String result;
             DataTable dt = new DataTable();
             try
