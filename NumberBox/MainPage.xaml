@@ -16,6 +16,8 @@
         <c:StringToRoundingAlgConverter x:Key="RoundingConverter" />
         <c:DoubleToIntConverter x:Key="ValueConverter" />
         <c:StringToValidationModeConverter x:Key="ValidationConverter" />
+        <c:StringToRounderConverter x:Key="RounderConverter" />
+        <c:DoubleToUIntConverter x:Key="UintConverter" />
     </Page.Resources>
 
     <RelativePanel>
@@ -29,17 +31,17 @@
 
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto" />
-                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
             <Grid.RowDefinitions>
-                <RowDefinition Height="*" />
-                <RowDefinition Height="*" />
-                <RowDefinition Height="*" />
-                <RowDefinition Height="*" />
-                <RowDefinition Height="*" />
-                <RowDefinition Height="*" />
-                <RowDefinition Height="*" />
-                <RowDefinition Height="*" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="Auto" />
@@ -67,8 +69,8 @@
 
           
             
-            <TextBlock x:Name="CustomBoxText" Grid.Row="8" Grid.Column="0" Text="Custom Box" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,50,0,0" />
-            <local:NumberBox x:Name="CustomBox" Margin="100" Grid.Row="9" Grid.Column="0" Width="250"  
+            <TextBlock x:Name="CustomBoxText" Grid.Row="8" Grid.Column="0" Text="NumberBox - Adjustable" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,50,0,0" />
+            <local:NumberBox x:Name="CustomBox" Grid.Row="9" Grid.Column="0" Width="250"  Height="Auto" Margin="150"
                              BasicValidationMode="{x:Bind validation.SelectedValue, Converter={StaticResource ValidationConverter}, Mode=OneWay}"
                              AcceptsCalculation="{x:Bind calculation.IsChecked, Converter={StaticResource BooleanConverter} , Mode=OneWay}"
                              SpinButtonPlacementMode="{x:Bind SpinButtons.SelectedValue, Converter={StaticResource SpinConverter}, Mode=OneWay}"
@@ -83,6 +85,8 @@
                              IsDecimalPointAlwaysDisplayed="{x:Bind DecPoint.IsChecked, Converter={StaticResource BooleanConverter}, Mode=OneWay}"
                              IsZeroSigned="{x:Bind zerosign.IsChecked, Converter={StaticResource BooleanConverter}, Mode=OneWay}"
                              RoundingAlgorithm="{x:Bind rounding.SelectedValue, Converter={StaticResource RoundingConverter}, Mode=OneWay}"
+                             IncrementPrecision="{x:Bind increment.Value, Mode=OneWay}"
+                             SignificantDigitPrecision="{x:Bind sigfig.Value, Converter={StaticResource UintConverter}, Mode=OneWay}"
                              
                              />
             <RelativePanel Grid.Row="8" Grid.Column="1" Grid.RowSpan="4" x:Name="CustomPanel" Background="BlanchedAlmond" CornerRadius="10" Padding="10" Margin="0,20,200,0" >
@@ -122,15 +126,15 @@
                 <local:NumberBox Header="Min Value" x:Name="minval" Text="0" RelativePanel.Below="minmax" Margin="0,10,0,0"/>
                 <local:NumberBox Header="Max Value" x:Name="maxval" Text="10" RelativePanel.Below="minval" Margin="0,10,0,0"/>
 
-
-                <TextBlock x:Name="prectext" Text="Precision Properties" RelativePanel.RightOf="val1" Margin="175,0,0,0" />
+                <TextBlock x:Name="prectext" Text="Precision Properties" RelativePanel.RightOf="val1" Margin="175,0,0,0" Style="{StaticResource BaseTextBlockStyle}" />
                 <local:NumberBox Value="2" Header="Fraction Digits" x:Name="frac" PlaceholderText="FractionDigits" RelativePanel.Below="prectext" RelativePanel.RightOf="val1" Margin="175,0,0,0" />
                 <local:NumberBox Value="1" Header="Integer Digits" x:Name="integ" PlaceholderText="IntegerDigits" RelativePanel.Below="frac" RelativePanel.RightOf="val1" Margin="175,0,0,0" />
                 <local:NumberBox Header="Significant Digits" x:Name="dig" PlaceholderText="Significant Digits" RelativePanel.Below="integ" RelativePanel.RightOf="val1" Margin="175,0,0,0" />
                 <CheckBox x:Name="DecPoint" Content="IsDecimalPointAlwaysDisplayed" RelativePanel.Below="dig" RelativePanel.RightOf="val1" Margin="175,0,0,0" />
                 <CheckBox x:Name="zerosign" Content="IsZeroSigned" RelativePanel.Below="DecPoint" RelativePanel.RightOf="val1" Margin="175,0,0,0" />
 
-                <ComboBox x:Name="rounding" SelectedValue="None" PlaceholderText="Rounding Algorithm (TODO)" RelativePanel.Below="zerosign" RelativePanel.RightOf="val1" Margin="175,0,0,0" >
+                <TextBlock Text="Rounding Properties" RelativePanel.Below="zerosign" Name="roundtext" RelativePanel.RightOf="val1" Margin="175,0,0,0" Style="{StaticResource BaseTextBlockStyle}"/>
+                <ComboBox Header="Rounding Algorithm" x:Name="rounding" SelectedValue="None" PlaceholderText="Rounding Algorithm" RelativePanel.Below="roundtext" RelativePanel.RightOf="val1" Margin="175,0,0,0" >
                     <x:String>None</x:String>
                     <x:String>RoundAwayFromZero</x:String>
                     <x:String>RoundDown</x:String>
@@ -143,6 +147,12 @@
                     <x:String>RoundTowardsZero</x:String>
                     <x:String>RoundUp</x:String>
                 </ComboBox>
+                <ComboBox Header="Number Rounder Type (Increment/SigFig)" x:Name="rounder" PlaceholderText="NumberRounder" RelativePanel.Below="rounding" RelativePanel.RightOf="val1" Margin="175,0,0,0" SelectedValue="IncrementNumberRounder" >
+                    <x:String>IncrementNumberRounder</x:String>
+                    <x:String>SignificantDigitsNumberRounder</x:String>
+                </ComboBox>
+                <local:NumberBox x:Name="increment" RelativePanel.Below="rounder" RelativePanel.RightOf="val1" Margin="175,0,0,0" Header="IncrementPrecision"/>
+                <local:NumberBox x:Name="sigfig" RelativePanel.Below="increment" RelativePanel.RightOf="val1" Margin="175,0,0,0" Header="Significant Figure Precision"/>
 
 
 

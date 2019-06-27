@@ -235,4 +235,65 @@ namespace NumberBox.Converters
         }
     }
 
+
+    public class StringToRounderConverter : IValueConverter
+    {
+        public object Convert(object value, Type targetType, object parameter, string language)
+        {
+            if (value is String)
+            {
+                switch (value)
+                {
+                    case "IncrementNumberRounder":
+                        return NumberBoxNumberRounder.IncrementNumberRounder;
+                    case "SignificantDigitsNumberRounder":
+                        return NumberBoxNumberRounder.SignificantDigitsNumberRounder;
+
+                }
+            }
+            return false;
+        }
+        public object ConvertBack(object value, Type targetType, object parameter, string language)
+        {
+            if (value is NumberBoxMinMaxMode)
+            {
+                switch (value)
+                {
+                    case NumberBoxNumberRounder.IncrementNumberRounder:
+                        return "IncrementNumberRounder";
+                    case NumberBoxNumberRounder.SignificantDigitsNumberRounder:
+                        return "SignificantDigitsNumberRounder";
+                }
+            }
+            return false;
+        }
+    }
+
+
+
+
+    public class DoubleToUIntConverter : IValueConverter
+    {
+        public object Convert(object value, Type targetType, object parameter, string language)
+        {
+            if (value is double)
+            {
+                return System.Convert.ToUInt32(value);
+            }
+            return false;
+        }
+
+        public object ConvertBack(object value, Type targetType, object parameter, string language)
+        {
+            if (value is int)
+                return System.Convert.ToDouble(value);
+            return false;
+        }
+    }
+
+
+
+
+
+
 }
