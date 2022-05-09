@@ -1,6 +1,6 @@
 # NumberBox
 Microsoft - Prototype for UWP NumberBox Control
-## This prototype is no longer in development - see my [branch on the official WinUI Repo for final product work](https://github.com/microsoft/microsoft-ui-xaml/tree/user/t-ketaha/numberbox)
+## This prototype is no longer in development - see the official NumberBox control in WinUI3!
 
 
 [Project Specs](https://github.com/microsoft/microsoft-ui-xaml-specs/blob/user/savoyschuler/numberbox/active/NumberBox/NumberBox.md)
