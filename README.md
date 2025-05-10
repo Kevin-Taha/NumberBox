@@ -17,3 +17,5 @@ Microsoft - Prototype for UWP NumberBox Control
 The test page can be edited even at runtime by changing MainPage.xaml. Changing MainPage.xaml or the Converter code will not affect the NumberBox codebehind. NumberBox code is stored in NumberBox.cs and it's resource/style template, NumberBox.xaml.
 
 NumberBox is a subclass of of [Textbox](https://docs.microsoft.com/en-us/uwp/api/Windows.UI.Xaml.Controls.TextBox), and thus implements all of TextBox's properties. 
+
+test
